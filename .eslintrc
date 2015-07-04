@@ -1,0 +1,11 @@
+{
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-shadow": [2, {"hoist": "functions"}],
+    "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+    "no-use-before-define": [2, "nofunc"],
+    "quotes": [2, "double", "avoid-escape"]
+  }
+}

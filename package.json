@@ -1,0 +1,59 @@
+{
+  "name": "patternpack",
+  "description": "Generates pattern library content from simple markdown and css",
+  "version": "0.0.1",
+  "license": "MIT",
+  "readme": "readme.md",
+  "dependencies": {
+    "assemble": "latest",
+    "grunt": "latest",
+    "grunt-autoprefixer": "latest",
+    "grunt-bump": "latest",
+    "grunt-concurrent": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-connect": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-git": "latest",
+    "grunt-newer": "latest",
+    "grunt-sass": "latest",
+    "grunt-sass-globbing": "latest",
+    "lodash": "latest",
+    "merge-defaults": "latest",
+    "patternpack-example-theme": "latest",
+    "pretty": "latest"
+  },
+  "devDependencies": {
+    "grunt-eslint": "latest"
+  },
+  "scripts": {
+    "preinstall": "npm install --ignore-scripts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patternpack/patternpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/patternpack/patternpack/issues"
+  },
+  "author": "John Gully <john.gully@slalom.com>",
+  "contributors": [
+    "Marcelo Sommers <marcelos@slalom.com>"
+  ],
+  "keywords": [
+    "atomic design",
+    "atomic-design",
+    "atomicdesign",
+    "atomic",
+    "design",
+    "design system",
+    "library",
+    "pack",
+    "pattern",
+    "pattern pack",
+    "pattern-pack",
+    "pattern-library",
+    "patternlibrary",
+    "patternpack"
+  ]
+}
