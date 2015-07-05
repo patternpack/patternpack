@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
   "use strict";
 
-  var log = require("./gruntLogHelper.js")(grunt);
+  var log = require("../gruntLogHelper.js")(grunt);
   var _ = require("lodash");
   _.defaultsDeep = require("merge-defaults"); // Add deep defaults capabilities to lodash
 
@@ -82,7 +82,7 @@ module.exports = function (grunt) {
     // TODO: FIX THIS.  Pass the options to the command!
 
     // Create the options required to run the child grunt process
-    var gruntRunner = require("./gruntRunner.js")(grunt);
+    var gruntRunner = require("../gruntRunner.js")(grunt);
     var gruntRunnerOptions = {
       name: options.patternPackName,
       tasks: options.task,
