@@ -4,6 +4,7 @@
   "src": "./src",
   "assets": "./src/assets",
   "theme": "./node_modules/patternpack-example-theme",
+  "cssPreprocessor": "sass",
   "publish": {
     "library": true,
     "patterns": false

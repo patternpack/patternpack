@@ -19,11 +19,16 @@ module.exports = function (grunt) {
     // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
     // task: "build",
 
-    // TODO: Implement the ability to only publish certain resources (css|library|patterns)
+    // Configures the css preprocessor (sass|less)
+    cssPreprocessor: "sass",
+
+    // Configures the ability to only publish certain resources (css|library|patterns)
     publish: {
       library: true,
       patterns: false
     },
+
+    // Configures the pattern hierarchy.
     patternStructure: [
       { name: "Atoms", path: "atoms" },
       { name: "Molecules", path: "molecules" },
