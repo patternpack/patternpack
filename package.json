@@ -11,13 +11,14 @@
     "grunt-bump": "latest",
     "grunt-concurrent": "latest",
     "grunt-contrib-clean": "latest",
-    "grunt-contrib-copy": "latest",
     "grunt-contrib-connect": "latest",
+    "grunt-contrib-copy": "latest",
     "grunt-contrib-watch": "latest",
     "grunt-git": "latest",
     "grunt-newer": "latest",
     "grunt-sass": "latest",
     "grunt-sass-globbing": "latest",
+    "load-grunt-parent-tasks": "latest",
     "lodash": "latest",
     "merge-defaults": "latest",
     "patternpack-example-theme": "latest",
@@ -25,9 +26,6 @@
   },
   "devDependencies": {
     "grunt-eslint": "latest"
-  },
-  "scripts": {
-    "preinstall": "npm install --ignore-scripts"
   },
   "repository": {
     "type": "git",

@@ -273,20 +273,21 @@ module.exports = function (grunt) {
     }
   });
 
-  // Load the tasks
-  grunt.loadNpmTasks("assemble");
-  grunt.loadNpmTasks("grunt-autoprefixer");
-  grunt.loadNpmTasks("grunt-bump");
-  grunt.loadNpmTasks("grunt-concurrent");
-  grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks("grunt-contrib-connect");
-  grunt.loadNpmTasks("grunt-contrib-watch");
-  grunt.loadNpmTasks("grunt-eslint");
-  grunt.loadNpmTasks("grunt-git");
-  grunt.loadNpmTasks("grunt-newer");
-  grunt.loadNpmTasks("grunt-sass");
-  grunt.loadNpmTasks("grunt-sass-globbing");
+  // Load the tasks using the load-grunt-parent-tasks module.
+  // This allows the grun tasks to still be loaded when the
+  // calling pattern library happens to contain one of the
+  // dependencies used by pattern pack.  For more info:
+  // https://www.npmjs.com/package/load-grunt-parent-tasks
+  require("load-grunt-parent-tasks")(grunt, {
+    // The globbing pattern used to locate the desired grunt tasks
+    pattern: [
+      "grunt-*",
+      "assemble"
+    ],
+    // The list of dependencies to include
+    // ["dependencies", "optionalDependencies"]
+    scope: ["dependencies"]
+  });
 
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups
