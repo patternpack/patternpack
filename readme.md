@@ -134,5 +134,30 @@ src/
   pages
 ```
 
+#### All available options
+This example shows all options with their default options.
+
+```js
+{
+  release: "./dist",
+  build: "./html",
+  src: "./src",
+  assets: "./src/assets",
+  theme: "./node_modules/patternpack-example-theme",
+  publish: {
+    library: true,
+    patterns: false
+  },
+  patternStructure: [
+    { name: "Atoms", path: "atoms" },
+    { name: "Molecules", path: "molecules" },
+    { name: "Pages", path: "pages" }
+  ]
+}
+```
+
+## Release History
+* 2015-07-04    v0.0.1-alpha.1    Initial release
+
 [patternpack-example-library]:(https://github.com/patternpack/patternpack-example-library)
 [patternpack-example-theme]:(https://github.com/patternpack/patternpack-example-theme)
