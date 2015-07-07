@@ -33,10 +33,15 @@ module.exports = function (grunt) {
     ]
   };
 
-
-
-  function setupOptions(optionOverrides) {
+  function setupOptions(context) {
     var path = require("path");
+    var optionOverrides = context.options();
+
+    // If the task is named build or release then use it as the default value.
+    // Otherwise leave the task blank, which will result in "default" being called
+    if (context.target === "build" || context.target === "release") {
+      optionDefaults.task = context.target;
+    }
 
     // Override the defaults with any user specified options
     var options = _.defaultsDeep(_.cloneDeep(optionOverrides), optionDefaults);
@@ -73,9 +78,15 @@ module.exports = function (grunt) {
     }
 
     // Get the options
-    var options = setupOptions(this.options());
+    var options = setupOptions(this);
     log.verbose("PatternPack options:");
     log.verbose(options);
+
+    // Ensure the task is set properly
+    if (options.task && options.task !== "" && options.task !== "default" && options.task !== "build" && options.task !== "release") {
+      log.log(options);
+      throw new Error('When specified options.task must be one of the following values: "", "default", "build", "release"');
+    }
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command
