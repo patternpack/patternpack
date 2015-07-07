@@ -24,18 +24,19 @@ Task options may be specified according to the grunt [Configuring tasks](http://
 ### Options
 
 #### src
-Type: `string`
-Defult: `./src`
+Type: `string`  
+Default: `./src`
+
 The path at which the patterns can be located.  This is base path to all the pattern in the pattern library.
 
 #### build
-Type: `string`
+Type: `string`  
 Default: `./html`
 
 The path at which the patterns library will be generated.  This is the base path where the working pattern library will be created, and can be reviewed during development.
 
 #### release
-Type: `string`
+Type: `string`  
 Default: `./release`
 
 The path at which the pattern library will published.  This is the base path where the released pattern library assets can be found by consuming applications.
@@ -53,7 +54,7 @@ Default: `true`
 Indicates whether a full pattern library will be generated.
 
 #### publish.library
-Type: `boolean`
+Type: `boolean`  
 Defult: `false`
 
 Indicates whether standalone patterns will be generated.  
@@ -61,7 +62,7 @@ Indicates whether standalone patterns will be generated.
 _This option can be useful if you would like to integrate patterns directly into another application.  For example when the patterns includes components or interations that are only available in the context of the application (such as AngularJS directives)._
 
 #### patternStructure
-Type: `Array`
+Type: `Array`  
 Default:
 ```js
 [
@@ -73,8 +74,8 @@ Default:
 
 Specifies the hierarchy used to organize patterns.  The default configuration represents the atomic design hierarch, but this can be overriden with any preferred structure.
 
->`name`: The friendly name that is displayed in the pattern library.
-> `path`: The location at which the patterns can be found.  This path is relative to the `src` path.
+>`name`: The friendly name that is displayed in the pattern library.  
+>`path`: The location at which the patterns can be found.  This path is relative to the `src` path.
 
 _The order of the items in the Array determines the order in which they will be displayed in the pattern library._
 
@@ -82,7 +83,7 @@ _The order of the items in the Array determines the order in which they will be 
 ### Usage Examples
 
 #### Basic usage
-This is an example of the most minimal configuration possible for patternpack.  If the default conventions are followed, minimal grunt configuration is required.
+This is an example of the most minimal configuration possible for PatternPack.  If the default conventions are followed, minimal grunt configuration is required.
 
 ```js
 patternpack: {
