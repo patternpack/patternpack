@@ -43,9 +43,9 @@ The path at which the pattern library will published.  This is the base path whe
 
 #### theme
 Type: `string`  
-Default: `./node_modules/patternpack-example-theme`
+Default: `patternpack-example-theme`
 
-The path at which the patternpack theme can be located.  Custom themes can be npm modules or simply files that exist within a pattern library.  By default patternpack is configured to use the [patternpack-example-theme]
+The name of the npm package (or the path) which contains the PatternPack theme.  Custom themes can be npm modules or simply files that exist within a pattern library.  By default PatternPack is configured to use the [patternpack-example-theme]
 
 #### publish.library
 Type: `boolean`  

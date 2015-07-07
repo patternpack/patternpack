@@ -2,11 +2,13 @@ module.exports = function (grunt) {
   "use strict";
 
   var log = require("../gruntLogHelper.js")(grunt);
+  var fs = require("fs");
   var _ = require("lodash");
   _.defaultsDeep = require("merge-defaults"); // Add deep defaults capabilities to lodash
 
+  var npmPath = "./node_modules/";
   var packageName = "patternpack";
-  var packagePath = "./node_modules/" + packageName;
+  var packagePath = npmPath + packageName;
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
   var optionDefaults = {
@@ -15,7 +17,7 @@ module.exports = function (grunt) {
     build: "./html",
     src: "./src",
     assets: "./src/assets",
-    theme: "./node_modules/patternpack-example-theme",
+    theme: npmPath + "patternpack-example-theme",
 
     // Operation to run (default|build|release)
     // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
@@ -32,6 +34,20 @@ module.exports = function (grunt) {
       { name: "Pages", path: "pages" }
     ]
   };
+
+  function getPackagePathOrFallbackPath(path) {
+    var validatedPath;
+    var pathOfPackage = npmPath + path;
+
+    if (fs.existsSync(pathOfPackage)) {
+      validatedPath = pathOfPackage;
+    } else if (fs.existsSync(path)) {
+      validatedPath = path;
+    } else {
+      throw new Error("Could not be find: " + pathOfPackage + " or " + path);
+    }
+    return validatedPath;
+  }
 
   function setupOptions(context) {
     var path = require("path");
@@ -54,9 +70,19 @@ module.exports = function (grunt) {
     options.build = path.relative(packagePath, options.build);
     options.src = path.relative(packagePath, options.src);
     options.assets = path.relative(packagePath, options.assets);
+
+    // Resolve the theme path either from a path or from a package name
+    if (optionOverrides.theme) {
+      optionOverrides.theme = getPackagePathOrFallbackPath(optionOverrides.theme);
+    }
+    log.verbose("Theme paths");
+    log.verbose("Default: " + optionDefaults.theme);
+    log.verbose("Override: " + optionOverrides.theme);
+
     // If the pattern is specified by the user then get the relative path,
     // otherwise use the path inside pattern pack to provide the default patterns.
-    options.theme = optionOverrides.theme ? path.relative(packagePath, options.theme) : optionDefaults.theme;
+    options.theme = optionOverrides.theme ? path.relative(packagePath, optionOverrides.theme) : optionDefaults.theme;
+    log.verbose("Resolved: " + options.theme);
 
     return options;
   }
@@ -72,7 +98,6 @@ module.exports = function (grunt) {
 
     // Ensure that the packagePath exists.
     // TODO: Figure out how to abstract this path creation.  It is also used in the gruntRunner.js
-    var fs = require("fs");
     if (!fs.existsSync(packagePath)) {
       throw new Error("The path to the pattern pack dependency does not exists at: " + packagePath);
     }
