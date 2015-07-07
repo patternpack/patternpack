@@ -42,13 +42,13 @@ Default: `./release`
 The path at which the pattern library will published.  This is the base path where the released pattern library assets can be found by consuming applications.
 
 #### theme
-Type: `string`
+Type: `string`  
 Default: `./node_modules/patternpack-example-theme`
 
 The path at which the patternpack theme can be located.  Custom themes can be npm modules or simply files that exist within a pattern library.  By default patternpack is configured to use the [patternpack-example-theme]
 
 #### publish.library
-Type: `boolean`
+Type: `boolean`  
 Default: `true`
 
 Indicates whether a full pattern library will be generated.
