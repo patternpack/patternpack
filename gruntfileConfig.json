@@ -13,6 +13,5 @@
     { "name": "Atoms", "path": "atoms" },
     { "name": "Molecules", "path": "molecules" },
     { "name": "Pages", "path": "pages" }
-  ],
-  "patternPackName": "patternpack"
+  ]
 }
