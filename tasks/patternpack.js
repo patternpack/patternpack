@@ -9,6 +9,7 @@ module.exports = function (grunt) {
   var npmPath = "./node_modules/";
   var packageName = "patternpack";
   var packagePath = npmPath + packageName;
+  var allowedTasks = ["", "default", "build", "release", "release-patch", "release-minor", "release-major"];
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
   var optionDefaults = {
@@ -53,9 +54,9 @@ module.exports = function (grunt) {
     var path = require("path");
     var optionOverrides = context.options();
 
-    // If the task is named build or release then use it as the default value.
+    // If the task is allowed then use it as the default value.
     // Otherwise leave the task blank, which will result in "default" being called
-    if (context.target === "build" || context.target === "release") {
+    if (_.contains(allowedTasks, context.target)) {
       optionDefaults.task = context.target;
     }
 
@@ -108,9 +109,11 @@ module.exports = function (grunt) {
     log.verbose(options);
 
     // Ensure the task is set properly
-    if (options.task && options.task !== "" && options.task !== "default" && options.task !== "build" && options.task !== "release") {
+    if(!_.contains(allowedTasks, options.task || "")) {
       log.log(options);
-      throw new Error('When specified options.task must be one of the following values: "", "default", "build", "release"');
+      log.log("Allowed tasks:");
+      log.log(allowedTasks);
+      throw new Error("When specified options.task must be an allowed task.");
     }
 
     // Save the options
