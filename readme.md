@@ -41,6 +41,25 @@ Default: `./release`
 
 The path at which the pattern library will published.  This is the base path where the released pattern library assets can be found by consuming applications.
 
+#### task
+Type: `string`  
+Default: `""`  
+Allowed Values: `"", default", "build, release, release-patch, release-minor, release-major`
+
+The action that PatternPack will take when run.
+
+> `""` `default`: builds the pattern library and runs a local webserver.  
+> `build`: builds the pattern library.  
+> `release`: alias for `release-patch`.  
+> `release-patch`: patch increment to the package version, then performs a release.  
+> `release-minor`: minor increment to the package version, then performs a release.  
+> `release-major`: major increment to the package version, then performs a release.  
+
+A release performs the following actions
+* Increments the package version
+* Copies the current build to the release location
+* Commits the changes with the version number as the message
+
 #### theme
 Type: `string`  
 Default: `patternpack-example-theme`
@@ -91,11 +110,24 @@ patternpack: {
     assets: './src/assets'
   },
   run: {},
-  build: {
-    task: 'build'
+  build: {},
+  release: {}
+}
+```
+
+#### Custom task names usage
+This example shows how task names can be customized.  Configuring the the `task` option specifies what action PatternPack will take when the custom task is called.
+
+```js
+patternpack: {
+  customDev: {
+    task: 'default' // builds the application and runs the server
   },
-  release: {
-    task: 'release'
+  customBuild: {
+    task: 'build' // builds the application
+  },
+  customRelease: {
+    task: 'release' // releases the current build
   }
 }
 ```
