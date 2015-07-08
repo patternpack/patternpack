@@ -9,7 +9,8 @@ module.exports = function (grunt) {
   var npmPath = "./node_modules/";
   var packageName = "patternpack";
   var packagePath = npmPath + packageName;
-  var allowedTasks = ["", "default", "build", "release", "release-patch", "release-minor", "release-major"];
+  var tasksValues = ["default", "build", "release", "release-patch", "release-minor", "release-major", "", undefined];
+  var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
   var optionDefaults = {
@@ -61,7 +62,7 @@ module.exports = function (grunt) {
 
     // If the task is allowed then use it as the default value.
     // Otherwise leave the task blank, which will result in "default" being called
-    if (_.contains(allowedTasks, context.target)) {
+    if (_.contains(tasksValues, context.target)) {
       optionDefaults.task = context.target;
     }
 
@@ -99,6 +100,15 @@ module.exports = function (grunt) {
     grunt.file.write(file, contents);
   }
 
+  function ensureOptions(options, name, allowedValues, allowFalsey) {
+    var value = options[name];
+    if (!_.contains(allowedValues, value)) {
+      log.log("Allowed values for " + name + "");
+      log.log(allowedValues);
+      throw new Error("The option " + name + " was set to an unacceptable value: " + value);
+    }
+  }
+
   function gruntPatternPackTask() {
     var done = this.async();
 
@@ -113,13 +123,9 @@ module.exports = function (grunt) {
     log.verbose("PatternPack options:");
     log.verbose(options);
 
-    // Ensure the task is set properly
-    if(!_.contains(allowedTasks, options.task || "")) {
-      log.log(options);
-      log.log("Allowed tasks:");
-      log.log(allowedTasks);
-      throw new Error("When specified options.task must be an allowed task.");
-    }
+    // Ensure option values are set to acceptable values
+    ensureOptions(options, "task", tasksValues);
+    ensureOptions(options, "cssPreprocessor", cssPreprocessorValues);
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command

@@ -75,8 +75,6 @@ module.exports = function (grunt) {
       tasks = tasks.concat(sassTasks);
     } else if (cssPreprocessorConfig === "less") {
       tasks = tasks.concat(lessTasks);
-    } else {
-      throw new Error("The cssPreprocessor property of patternpack configuration was not set correctly.  This property must be set to one of the following values: 'sass', 'less'.");
     }
 
     tasks = tasks.concat(cssTasks);
