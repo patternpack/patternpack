@@ -33,7 +33,10 @@ module.exports = function (grunt) {
       { name: "Atoms", path: "atoms" },
       { name: "Molecules", path: "molecules" },
       { name: "Pages", path: "pages" }
-    ]
+    ],
+    server: {
+      port: 8888
+    }
   };
 
   function getPackagePathOrFallbackPath(path) {
