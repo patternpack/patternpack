@@ -125,7 +125,7 @@ patternpack: {
 }
 ```
 
-#### Custom task names usage
+#### Custom task names
 This example shows how task names can be customized.  Configuring the the `task` option specifies what action PatternPack will take when the custom task is called.
 
 ```js
@@ -198,8 +198,32 @@ This example shows all options with their default options.
 }
 ```
 
+
+## PatternPack Workflow
+
+### Pattern Library Development
+When developing new patterns for a pattern library, PatternPack provides the `patternpack:default` and `patternpack:build` tasks to assist with the process.  The `patternpack:default` task is primarily used for interactive development.  It hosts a simple webserver for reviewing changes, and will automatically compile CSS and markdown into patterns as changes are made.
+
+The `patternpack:build` task does not run the webserver or monitor for changes.  It is best used for manual updates and inspection of the pattern library.  It is also useful to call as part of a customized build process.
+
+### Pattern Library Release
+In order to release a new version of a pattern library you create with PatternPack, the following sequence of commands should be executed.
+
+```
+grunt patternpack:build
+grunt patternpack:release
+git push --follow-tags
+```
+
+`grunt patternpack:build` tells pattern pack to generate the pattern library.  In most cases this will done during the pattern development process. `grunt patternpack:release` increments the version of the pattern library, copies the pattern library to the release location, commits the code and tags the git repo with the new version number. `git push --follow-tags` pushes the code changes to the origin and the newly added tag.
+
+Once released your application should be able to reference the newly tagged version of the pattern library to utilize the new patterns.
+
+
 ## Release History
-* 2015-07-04    v0.0.1-alpha.1    Initial release
+* 2015-07-08    v0.0.1-alpha.3    Added smarter default configurations.
+* 2015-07-06    v0.0.1-alpha.2    Resolved issues with grunt loading the patternpack task.
+* 2015-07-04    v0.0.1-alpha.1    Initial release.
 
 [patternpack-example-library]:(https://github.com/patternpack/patternpack-example-library)
 [patternpack-example-theme]:(https://github.com/patternpack/patternpack-example-theme)
