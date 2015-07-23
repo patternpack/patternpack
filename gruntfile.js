@@ -65,6 +65,25 @@ module.exports = function (grunt) {
     return buildTasks;
   }
 
+  function getStyleTasks(cssPreprocessorConfig) {
+    var sassTasks = ["sass_globbing:sass", "sass"];
+    var lessTasks = ["sass_globbing:less", "less"];
+    var cssTasks = ["autoprefixer:patterns", "copy:css"];
+    var tasks = [];
+
+    if (cssPreprocessorConfig === "sass") {
+      tasks = tasks.concat(sassTasks);
+    } else if (cssPreprocessorConfig === "less") {
+      tasks = tasks.concat(lessTasks);
+    }
+
+    tasks = tasks.concat(cssTasks);
+
+    log.verbose("PatternPack CSS Preprocessor Tasks:");
+    log.verbose(tasks);
+    return tasks;
+  }
+
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
 
@@ -189,13 +208,33 @@ module.exports = function (grunt) {
       }
     },
 
+    less: {
+      options: {
+        sourceMap: true,
+        outputSourceFiles: true,
+        compress: true
+      },
+      patterns: {
+        files: [
+          {
+            src: assets("/less/patterns.less"),
+            dest: assets("/css/patterns.css")
+          }
+        ]
+      }
+    },
+
     // Import all sass styles defined for patterns
     // Use the pattern structures to ensure that the styles are processed
     // in the specific order the user configures.
     "sass_globbing": {
-      all: {
+      sass: {
         src: allPatternStructurePaths("/**/*.scss"),
         dest: assets("/sass/patternpack-patterns.scss")
+      },
+      less: {
+        src: allPatternStructurePaths("/**/*.less"),
+        dest: assets("/less/patternpack-patterns.less")
       }
     },
 
@@ -292,7 +331,7 @@ module.exports = function (grunt) {
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups
   // and are typically composed together into workflows
-  grunt.registerTask("styles-patterns", ["sass_globbing", "sass:patterns", "autoprefixer:patterns", "copy:css"]);
+  grunt.registerTask("styles-patterns", getStyleTasks(config.cssPreprocessor));
   grunt.registerTask("assemble-patterns", ["assemble:patterns"]);
   grunt.registerTask("assemble-pattern-library", ["assemble:patternlibrary", "copy:assets", "copy:themeAssets"]);
 

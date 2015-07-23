@@ -13,6 +13,7 @@
     "grunt-contrib-clean": "latest",
     "grunt-contrib-connect": "latest",
     "grunt-contrib-copy": "latest",
+    "grunt-contrib-less": "latest",
     "grunt-contrib-watch": "latest",
     "grunt-git": "latest",
     "grunt-newer": "latest",
