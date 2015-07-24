@@ -13,6 +13,7 @@ module.exports = function (grunt) {
   var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
+  var optionsOverrideFileName = ".patternpackrc";
   var optionDefaults = {
     // Paths for input and output
     release: "./dist",
@@ -56,9 +57,15 @@ module.exports = function (grunt) {
     return validatedPath;
   }
 
+  function applyOverrides(value, overrideValue) {
+    return _.defaultsDeep(_.cloneDeep(overrideValue), value);
+  }
+
   function setupOptions(context) {
     var path = require("path");
+    var options = {};
     var optionOverrides = context.options();
+    var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
 
     // If the task is allowed then use it as the default value.
     // Otherwise leave the task blank, which will result in "default" being called
@@ -67,7 +74,10 @@ module.exports = function (grunt) {
     }
 
     // Override the defaults with any user specified options
-    var options = _.defaultsDeep(_.cloneDeep(optionOverrides), optionDefaults);
+    // Apply overrides from the .patternpackrc file
+    // then apply the overrries from the gruntfile options
+    options = applyOverrides(optionDefaults, optionOverridesFile);
+    options = applyOverrides(options, optionOverrides);
 
     // Add the relative path to the root of the calling pattern library
     options.root = path.relative(packagePath, "");
@@ -79,7 +89,7 @@ module.exports = function (grunt) {
     options.assets = path.relative(packagePath, options.assets);
 
     // Resolve the application integration path if the user has provided it
-    if (optionOverrides.integrate) {
+    if (options.integrate) {
       options.integrate = path.relative(packagePath, options.integrate);
     }
 
