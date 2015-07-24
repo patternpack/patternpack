@@ -9,7 +9,7 @@ module.exports = function (grunt) {
   var npmPath = "./node_modules/";
   var packageName = "patternpack";
   var packagePath = npmPath + packageName;
-  var tasksValues = ["default", "build", "release", "release-patch", "release-minor", "release-major", "", undefined];
+  var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "", undefined];
   var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
@@ -77,6 +77,11 @@ module.exports = function (grunt) {
     options.build = path.relative(packagePath, options.build);
     options.src = path.relative(packagePath, options.src);
     options.assets = path.relative(packagePath, options.assets);
+
+    // Resolve the application integration path if the user has provided it
+    if (optionOverrides.integrate) {
+      options.integrate = path.relative(packagePath, options.integrate);
+    }
 
     // Resolve the theme path either from a path or from a package name
     if (optionOverrides.theme) {

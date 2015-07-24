@@ -44,7 +44,7 @@ The path at which the pattern library will published.  This is the base path whe
 #### task
 Type: `string`  
 Default: `""`  
-Allowed Values: `"", "default", "build, release, release-patch, release-minor, release-major`
+Allowed Values: `"", default, build, integrate, release, release-patch, release-minor, release-major`
 
 The action that PatternPack will take when run.
 
@@ -69,7 +69,7 @@ The name of the npm package (or the path) which contains the PatternPack theme. 
 #### cssPreprocessor
 Type: `string`  
 Default: `sass`
-Allowed Values: `"sass", "less", "none", ""`
+Allowed Values: `sass, less, none, ""`
 
 The type of css preprocessor to run.
 > `sass`: runs the sass preprocessor on `assets/sass/patterns.scss`
@@ -185,6 +185,7 @@ This example shows all options with their default options.
   build: "./html",
   src: "./src",
   assets: "./src/assets",
+  integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
   publish: {
     library: true,
