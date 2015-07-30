@@ -288,19 +288,12 @@ module.exports = function (grunt) {
 
     // Web server
     connect: {
-      server: {
-        options: {
-          port: 8888,
-          base: build("/pattern-library"),
-          hostname: "*"
-        }
+      options: {
+        base: build("/pattern-library"),
+        hostname: "*"
       },
-      browser: {
-        options: {
-          open: {
-            target: "http://localhost:8888"
-          }
-        }
+      server: {
+        options: config.server
       }
     },
 
