@@ -44,7 +44,7 @@ The path at which the pattern library will published.  This is the base path whe
 #### task
 Type: `string`  
 Default: `""`  
-Allowed Values: `"", "default", "build, release, release-patch, release-minor, release-major`
+Allowed Values: `"", default, build, integrate, release, release-patch, release-minor, release-major`
 
 The action that PatternPack will take when run.
 
@@ -69,7 +69,7 @@ The name of the npm package (or the path) which contains the PatternPack theme. 
 #### cssPreprocessor
 Type: `string`  
 Default: `sass`
-Allowed Values: `"sass", "less", "none", ""`
+Allowed Values: `sass, less, none, ""`
 
 The type of css preprocessor to run.
 > `sass`: runs the sass preprocessor on `assets/sass/patterns.scss`
@@ -84,7 +84,7 @@ Indicates whether a full pattern library will be generated.
 
 #### publish.library
 Type: `boolean`  
-Defult: `false`
+Default: `false`
 
 Indicates whether standalone patterns will be generated.  
 
@@ -108,6 +108,16 @@ Specifies the hierarchy used to organize patterns.  The default configuration re
 
 _The order of the items in the Array determines the order in which they will be displayed in the pattern library._
 
+#### server
+See the options in `[grunt-connect](https://github.com/gruntjs/grunt-contrib-connect#options)`
+
+For example:
+
+```js
+  server: {
+    port: 5555
+  }
+```
 
 ### Usage Examples
 
@@ -176,6 +186,21 @@ src/
   pages
 ```
 
+#### User-specific settings override
+An individual developer can override any option in the `patternpack` task by creating a `.patternpackrc` file. This is a JSON file that would mirror the contents of the `patternpack.options` portion of your task. It's recommended to add the `.patternpackrc` file to your `.gitignore`
+
+For example, to override the server configuration, set up a `.patternpackrc` file:
+
+```
+{
+  "server": {
+    "port": 1234
+  }
+}
+```
+
+Note that this file should be conforming JSON, so all strings should be wrapped in double quotes.
+
 #### All available options
 This example shows all options with their default options.
 
@@ -185,6 +210,7 @@ This example shows all options with their default options.
   build: "./html",
   src: "./src",
   assets: "./src/assets",
+  integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
   publish: {
     library: true,

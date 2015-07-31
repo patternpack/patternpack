@@ -12,6 +12,10 @@ module.exports = function (grunt) {
     return getPath(config.root, path);
   }
 
+  function integrate(path) {
+    return getPath(config.integrate, path)
+  }
+
   function release(path) {
     return getPath(config.release, path);
   }
@@ -167,6 +171,15 @@ module.exports = function (grunt) {
           "!pattern-library/theme-assets/**"
         ],
         dest: release()
+      },
+      integrate: {
+        expand: true,
+        cwd: build(),
+        src: [
+          "**",
+          "!pattern-library/theme-assets/**"
+        ],
+        dest: integrate()
       },
       css: {
         src: src("/css/patterns.css"),
@@ -335,6 +348,7 @@ module.exports = function (grunt) {
   grunt.registerTask("release-major", ["clean:release", "copy:release", "gitadd", "bump:major"]);
 
   // Main tasks
+  grunt.registerTask("integrate", ["build", "copy:integrate"]);
   grunt.registerTask("release", ["clean:release", "copy:release", "release-patch"]);
   grunt.registerTask("build", getBuildTasks(config.publish));
   grunt.registerTask("default", ["build", "server"]);

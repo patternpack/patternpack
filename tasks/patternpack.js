@@ -9,10 +9,11 @@ module.exports = function (grunt) {
   var npmPath = "./node_modules/";
   var packageName = "patternpack";
   var packagePath = npmPath + packageName;
-  var tasksValues = ["default", "build", "release", "release-patch", "release-minor", "release-major", "", undefined];
+  var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "", undefined];
   var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
+  var optionsOverrideFileName = ".patternpackrc";
   var optionDefaults = {
     // Paths for input and output
     release: "./dist",
@@ -59,9 +60,15 @@ module.exports = function (grunt) {
     return validatedPath;
   }
 
+  function applyOverrides(value, overrideValue) {
+    return _.defaultsDeep(_.cloneDeep(overrideValue), value);
+  }
+
   function setupOptions(context) {
     var path = require("path");
+    var options = {};
     var optionOverrides = context.options();
+    var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
 
     // If the task is allowed then use it as the default value.
     // Otherwise leave the task blank, which will result in "default" being called
@@ -70,7 +77,10 @@ module.exports = function (grunt) {
     }
 
     // Override the defaults with any user specified options
-    var options = _.defaultsDeep(_.cloneDeep(optionOverrides), optionDefaults);
+    // Apply overrides from the .patternpackrc file
+    // then apply the overrries from the gruntfile options
+    options = applyOverrides(optionDefaults, optionOverrides);
+    options = applyOverrides(options, optionOverridesFile);
 
     // Add the relative path to the root of the calling pattern library
     options.root = path.relative(packagePath, "");
@@ -80,6 +90,11 @@ module.exports = function (grunt) {
     options.build = path.relative(packagePath, options.build);
     options.src = path.relative(packagePath, options.src);
     options.assets = path.relative(packagePath, options.assets);
+
+    // Resolve the application integration path if the user has provided it
+    if (options.integrate) {
+      options.integrate = path.relative(packagePath, options.integrate);
+    }
 
     // Resolve the theme path either from a path or from a package name
     if (optionOverrides.theme) {
