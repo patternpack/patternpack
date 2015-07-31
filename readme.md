@@ -109,7 +109,7 @@ Specifies the hierarchy used to organize patterns.  The default configuration re
 _The order of the items in the Array determines the order in which they will be displayed in the pattern library._
 
 #### server
-See the options in `[grunt-connect](https://github.com/gruntjs/grunt-contrib-connect#options)`
+See the options in [`grunt-connect`](https://github.com/gruntjs/grunt-contrib-connect#options)
 
 For example:
 
