@@ -186,6 +186,21 @@ src/
   pages
 ```
 
+#### User-specific settings override
+An individual developer can override any option in the `patternpack` task by creating a `.patternpackrc` file. This is a JSON file that would mirror the contents of the `patternpack.options` portion of your task. It's recommended to add the `.patternpackrc` file to your `.gitignore`
+
+For example, to override the server configuration, set up a `.patternpackrc` file:
+
+```
+{
+  "server": {
+    "port": 1234
+  }
+}
+```
+
+Note that this file should be conforming JSON, so all strings should be wrapped in double quotes.
+
 #### All available options
 This example shows all options with their default options.
 
