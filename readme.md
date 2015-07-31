@@ -84,7 +84,7 @@ Indicates whether a full pattern library will be generated.
 
 #### publish.library
 Type: `boolean`  
-Defult: `false`
+Default: `false`
 
 Indicates whether standalone patterns will be generated.  
 
