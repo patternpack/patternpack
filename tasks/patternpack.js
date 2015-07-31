@@ -76,8 +76,8 @@ module.exports = function (grunt) {
     // Override the defaults with any user specified options
     // Apply overrides from the .patternpackrc file
     // then apply the overrries from the gruntfile options
-    options = applyOverrides(optionDefaults, optionOverridesFile);
-    options = applyOverrides(options, optionOverrides);
+    options = applyOverrides(optionDefaults, optionOverrides);
+    options = applyOverrides(options, optionOverridesFile);
 
     // Add the relative path to the root of the calling pattern library
     options.root = path.relative(packagePath, "");
