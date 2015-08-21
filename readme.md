@@ -82,7 +82,7 @@ Default: `true`
 
 Indicates whether a full pattern library will be generated.
 
-#### publish.library
+#### publish.patterns
 Type: `boolean`  
 Default: `false`
 
