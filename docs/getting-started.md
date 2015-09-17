@@ -84,7 +84,7 @@ my-app
 
 Once the styles are properly imported into your application, start using the markup from the examples documented in the pattern library.
 
-
+<!--
 ## What's Next?
 PatternPack has been designed to be flexible to your needs.  When your ready, dig into some of the more advanced topics:
 * [Creating patterns](https://github.com/patternpack/patternpack/blob/master/docs/patterns.md)
@@ -92,6 +92,7 @@ PatternPack has been designed to be flexible to your needs.  When your ready, di
 * [Private packages](https://github.com/patternpack/patternpack/blob/master/docs/private.md)
 * [Advanced versioning](https://github.com/patternpack/patternpack/blob/master/docs/versioning.md)
 * [Use in applications](https://github.com/patternpack/patternpack/blob/master/docs/use.md)
+-->
 
 
 [LiveReload]: (http://livereload.com)
