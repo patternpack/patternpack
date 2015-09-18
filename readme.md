@@ -1,5 +1,5 @@
 # PatternPack
-PatternPack is designed to accelerate the creation of web application pattern libraries. When configured properly it will generate a static site pattern library.  The [patternpack-example-library] demonstrates exactly how to do this and is a good place to learn how to use PatternPack.
+PatternPack is designed to accelerate the creation of web application pattern libraries. When configured properly it will generate a static site pattern library. The [patternpack-example-library](https://github.com/patternpack/patternpack-example-library) demonstrates exactly how to do this and is a good place to learn how to use PatternPack.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.0`
