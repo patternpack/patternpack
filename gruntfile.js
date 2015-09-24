@@ -182,7 +182,7 @@ module.exports = function (grunt) {
         dest: integrate()
       },
       css: {
-        src: src("/css/patterns.css"),
+        src: assets("/css/patterns.css"),
         dest: build("/css/patterns.css")
       },
       assets: {
