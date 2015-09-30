@@ -243,11 +243,11 @@ module.exports = function (grunt) {
     "sass_globbing": {
       sass: {
         src: allPatternStructurePaths("/**/*.scss"),
-        dest: assets("/sass/patternpack-patterns.scss")
+        dest: assets("/sass/patterns.scss")
       },
       less: {
         src: allPatternStructurePaths("/**/*.less"),
-        dest: assets("/less/patternpack-patterns.less")
+        dest: assets("/less/patterns.less")
       }
     },
 
