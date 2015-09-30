@@ -19,7 +19,7 @@ grunt.loadNpmTasks('patternpack');
 ## PatternPack Task
 _Run this task with the `grunt patternpack` command._
 
-Task options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.  However the files and targets are not used at this time.
+Task options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide. However the files and targets are not used at this time.
 
 ### Options
 
@@ -27,19 +27,19 @@ Task options may be specified according to the grunt [Configuring tasks](http://
 Type: `string`  
 Default: `./src`
 
-The path at which the patterns can be located.  This is base path to all the pattern in the pattern library.
+The path at which the patterns can be located. This is base path to all the pattern in the pattern library.
 
 #### build
 Type: `string`  
 Default: `./html`
 
-The path at which the patterns library will be generated.  This is the base path where the working pattern library will be created, and can be reviewed during development.
+The path at which the patterns library will be generated. This is the base path where the working pattern library will be created, and can be reviewed during development.
 
 #### release
 Type: `string`  
 Default: `./release`
 
-The path at which the pattern library will published.  This is the base path where the released pattern library assets can be found by consuming applications.
+The path at which the pattern library will published. This is the base path where the released pattern library assets can be found by consuming applications.
 
 #### task
 Type: `string`  
@@ -48,23 +48,29 @@ Allowed Values: `"", default, build, integrate, release, release-patch, release-
 
 The action that PatternPack will take when run.
 
-> `""` `default`: builds the pattern library and runs a local webserver.  
-> `build`: builds the pattern library.  
-> `release`: alias for `release-patch`.  
-> `release-patch`: patch increment to the package version, then performs a release.  
-> `release-minor`: minor increment to the package version, then performs a release.  
-> `release-major`: major increment to the package version, then performs a release.  
+> `""` `default`: builds the pattern library and runs a local webserver.
+> `build`: builds the pattern library.
+> `release`: alias for `release-patch`.
+> `release-patch`: patch increment to the package version, then performs a release.
+> `release-minor`: minor increment to the package version, then performs a release.
+> `release-major`: major increment to the package version, then performs a release.
 
 A release performs the following actions
 * Increments the package version
 * Copies the current build to the release location
 * Commits the changes with the version number as the message
 
+#### assets
+Type: `string`
+Default: `./src/assets`
+
+A folder to house any additional assets to be shared across projects (e.g., fonts, icons, images, etc.).
+
 #### theme
 Type: `string`  
 Default: `patternpack-example-theme`
 
-The name of the npm package (or the path) which contains the PatternPack theme.  Custom themes can be npm modules or simply files that exist within a pattern library.  By default PatternPack is configured to use the [patternpack-example-theme]
+The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
 
 #### cssPreprocessor
 Type: `string`  
@@ -86,9 +92,9 @@ Indicates whether a full pattern library will be generated.
 Type: `boolean`  
 Default: `false`
 
-Indicates whether standalone patterns will be generated.  
+Indicates whether standalone patterns will be generated.
 
-_This option can be useful if you would like to integrate patterns directly into another application.  For example when the patterns includes components or interations that are only available in the context of the application (such as AngularJS directives)._
+_This option can be useful if you would like to integrate patterns directly into another application. For example when the patterns includes components or interations that are only available in the context of the application (such as AngularJS directives)._
 
 #### patternStructure
 Type: `Array`  
@@ -101,10 +107,10 @@ Default:
 ]
 ```
 
-Specifies the hierarchy used to organize patterns.  The default configuration represents the atomic design hierarch, but this can be overriden with any preferred structure.
+Specifies the hierarchy used to organize patterns. The default configuration represents the atomic design hierarch, but this can be overriden with any preferred structure.
 
->`name`: The friendly name that is displayed in the pattern library.  
->`path`: The location at which the patterns can be found.  This path is relative to the `src` path.
+>`name`: The friendly name that is displayed in the pattern library.
+>`path`: The location at which the patterns can be found. This path is relative to the `src` path.
 
 _The order of the items in the Array determines the order in which they will be displayed in the pattern library._
 
@@ -122,7 +128,7 @@ For example:
 ### Usage Examples
 
 #### Basic usage
-This is an example of the most minimal configuration possible for PatternPack.  If the default conventions are followed, minimal grunt configuration is required.
+This is an example of the most minimal configuration possible for PatternPack. If the default conventions are followed, minimal grunt configuration is required.
 
 ```js
 patternpack: {
@@ -136,7 +142,7 @@ patternpack: {
 ```
 
 #### Custom task names
-This example shows how task names can be customized.  Configuring the the `task` option specifies what action PatternPack will take when the custom task is called.
+This example shows how task names can be customized. Configuring the the `task` option specifies what action PatternPack will take when the custom task is called.
 
 ```js
 patternpack: {
@@ -166,7 +172,7 @@ patternpack: {
 ```
 
 #### Custom pattern structure
-This example illustrates how to configure PatternPack to understand a differnt style of pattern hierarchy.  In this case `components`, `modules`, `templates` and `pages`.
+This example illustrates how to configure PatternPack to understand a differnt style of pattern hierarchy. In this case `components`, `modules`, `templates` and `pages`.
 
 ```js
 [
@@ -228,9 +234,9 @@ This example shows all options with their default options.
 ## PatternPack Workflow
 
 ### Pattern Library Development
-When developing new patterns for a pattern library, PatternPack provides the `patternpack:default` and `patternpack:build` tasks to assist with the process.  The `patternpack:default` task is primarily used for interactive development.  It hosts a simple webserver for reviewing changes, and will automatically compile CSS and markdown into patterns as changes are made.
+When developing new patterns for a pattern library, PatternPack provides the `patternpack:default` and `patternpack:build` tasks to assist with the process. The `patternpack:default` task is primarily used for interactive development. It hosts a simple webserver for reviewing changes, and will automatically compile CSS and markdown into patterns as changes are made.
 
-The `patternpack:build` task does not run the webserver or monitor for changes.  It is best used for manual updates and inspection of the pattern library.  It is also useful to call as part of a customized build process.
+The `patternpack:build` task does not run the webserver or monitor for changes. It is best used for manual updates and inspection of the pattern library. It is also useful to call as part of a customized build process.
 
 ### Pattern Library Release
 In order to release a new version of a pattern library you create with PatternPack, the following sequence of commands should be executed.
@@ -241,7 +247,7 @@ grunt patternpack:release
 git push --follow-tags
 ```
 
-`grunt patternpack:build` tells pattern pack to generate the pattern library.  In most cases this will done during the pattern development process. `grunt patternpack:release` increments the version of the pattern library, copies the pattern library to the release location, commits the code and tags the git repo with the new version number. `git push --follow-tags` pushes the code changes to the origin and the newly added tag.
+`grunt patternpack:build` tells pattern pack to generate the pattern library. In most cases this will done during the pattern development process. `grunt patternpack:release` increments the version of the pattern library, copies the pattern library to the release location, commits the code and tags the git repo with the new version number. `git push --follow-tags` pushes the code changes to the origin and the newly added tag.
 
 Once released your application should be able to reference the newly tagged version of the pattern library to utilize the new patterns.
 
