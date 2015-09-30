@@ -289,7 +289,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: src("/**/*.scss"),
-        tasks: ["styles-patterns"]
+        tasks: ["styles-patterns", "copy:css"]
       },
       livereload: {
         files: build("/pattern-library/**"),
