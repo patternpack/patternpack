@@ -182,7 +182,7 @@ module.exports = function (grunt) {
         dest: integrate()
       },
       css: {
-        src: src("/css/patterns.css"),
+        src: assets("/css/patterns.css"),
         dest: build("/css/patterns.css")
       },
       assets: {
@@ -289,7 +289,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: src("/**/*.scss"),
-        tasks: ["styles-patterns"]
+        tasks: ["styles-patterns", "copy:css"]
       },
       livereload: {
         files: build("/pattern-library/**"),
