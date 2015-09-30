@@ -291,6 +291,10 @@ module.exports = function (grunt) {
         files: src("/**/*.scss"),
         tasks: ["styles-patterns", "copy:css"]
       },
+      less: {
+        files: src("/**/*.less"),
+        tasks: ["styles-patterns", "copy:css"]
+      },
       livereload: {
         files: build("/pattern-library/**"),
         options: {
