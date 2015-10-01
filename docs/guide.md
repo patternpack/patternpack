@@ -9,7 +9,7 @@ You have multiple methods to generate a Pattern Library:
 - Start with the [example library](https://github.com/patternpack/patternpack-example-library) ([documentation](https://github.com/patternpack/patternpack/blob/master/docs/getting-started.md#start-with-the-example-pattern-library))
 - Use Yeoman Generator ([documentation](https://github.com/patternpack/patternpack/blob/master/docs/getting-started.md#use-the-yeoman-generators))
 
-If you're starting with the example library or Yeoman, go ahead and skip to [the next section](LINK).
+If you're starting with the example library or Yeoman, go ahead and skip to [the next section](#hello-patternpack).
 
 The first step is to initialize a new project with a Git repository: create a new directory and run `git init`.
 
