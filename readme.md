@@ -143,7 +143,11 @@ patternpack: {
   },
   run: {},
   build: {},
-  release: {}
+  integrate: {},
+  release: {},
+  "release-patch": {},
+  "release-minor": {},
+  "release-major": {}
 }
 ```
 
