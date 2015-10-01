@@ -125,6 +125,12 @@ For example:
   }
 ```
 
+#### integrate
+Type: `string`
+Default: none
+
+Configures a directory where library builds will copy when running the `patternpack:integrate` command. Note that it is not recommended to configure this in your gruntfile when sharing across a team. Instead, use the `.patternpackrc` [method below](#user-specific-settings-override).
+
 ### Usage Examples
 
 #### Basic usage
