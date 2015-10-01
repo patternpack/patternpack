@@ -216,6 +216,7 @@ This example shows all options with their default options.
   build: "./html",
   src: "./src",
   assets: "./src/assets",
+  cssPreprocessor: "sass",
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
   publish: {
@@ -226,7 +227,10 @@ This example shows all options with their default options.
     { name: "Atoms", path: "atoms" },
     { name: "Molecules", path: "molecules" },
     { name: "Pages", path: "pages" }
-  ]
+  ],
+  server: {
+    port: 1234
+  }
 }
 ```
 
