@@ -182,18 +182,22 @@ patternpack: {
 ```
 
 #### Custom pattern structure
-This example illustrates how to configure PatternPack to understand a differnt style of pattern hierarchy. In this case `components`, `modules`, `templates` and `pages`.
+Using the `patternStructure` option, you are able to configure the categories you will put your patterns in. In this case `components`, `modules`, `templates` and `pages`.
 
 ```js
-[
-  { "name": "Components", "path": "components" },
-  { "name": "Modules", "path": "modules" },
-  { "name": "Templates", "path": "tmpl" }
-  { "name": "Pages", "path": "pages" }
-]
+patternpack: {
+  options: {
+    patternStructure: [
+      { "name": "Components", "path": "components" },
+      { "name": "Modules", "path": "modules" },
+      { "name": "Templates", "path": "tmpl" }
+      { "name": "Pages", "path": "pages" }
+    ]
+  }
+}
 ```
 
-In this configuration PatterPack would look for patterns in:
+In this configuration PatternPack would look for patterns in:
 ```
 src/
   components
@@ -201,6 +205,8 @@ src/
   tmpl
   pages
 ```
+
+Where src/ is configured in [`options.src`](#src).
 
 #### User-specific settings override
 An individual developer can override any option in the `patternpack` task by creating a `.patternpackrc` file. This is a JSON file that would mirror the contents of the `patternpack.options` portion of your task. It's recommended to add the `.patternpackrc` file to your `.gitignore`
