@@ -285,7 +285,7 @@ module.exports = function (grunt) {
           theme("/**/*.{md,hbs}"),
           src("/**/*.{md,hbs}")
         ],
-        tasks: ["assemble:patternlibrary"]
+        tasks: ["assemble-pattern-library"]
       },
       sass: {
         files: src("/**/*.scss"),
