@@ -167,8 +167,7 @@ module.exports = function (grunt) {
         expand: true,
         cwd: build(),
         src: [
-          "**",
-          "!pattern-library/theme-assets/**"
+          "**"
         ],
         dest: release()
       },
