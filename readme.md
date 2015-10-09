@@ -138,9 +138,6 @@ This is an example of the most minimal configuration possible for PatternPack. I
 
 ```js
 patternpack: {
-  options: {
-
-  },
   run: {},
   build: {},
   integrate: {},
