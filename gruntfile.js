@@ -346,13 +346,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask("server", ["connect", "watch"]);
 
-  grunt.registerTask("release-patch", ["clean:release", "copy:release", "gitadd", "bump:patch"]);
-  grunt.registerTask("release-minor", ["clean:release", "copy:release", "gitadd", "bump:minor"]);
-  grunt.registerTask("release-major", ["clean:release", "copy:release", "gitadd", "bump:major"]);
+  grunt.registerTask("release-patch", ["build", "clean:release", "copy:release", "gitadd", "bump:patch"]);
+  grunt.registerTask("release-minor", ["build", "clean:release", "copy:release", "gitadd", "bump:minor"]);
+  grunt.registerTask("release-major", ["build", "clean:release", "copy:release", "gitadd", "bump:major"]);
 
   // Main tasks
   grunt.registerTask("integrate", ["build", "copy:integrate"]);
-  grunt.registerTask("release", ["clean:release", "build", "copy:release", "release-patch"]);
+  grunt.registerTask("release", ["build", "clean:release", "copy:release", "release-patch"]);
   grunt.registerTask("build", getBuildTasks(config.publish));
   grunt.registerTask("default", ["build", "server"]);
 };
