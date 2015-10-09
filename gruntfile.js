@@ -167,8 +167,7 @@ module.exports = function (grunt) {
         expand: true,
         cwd: build(),
         src: [
-          "**",
-          "!pattern-library/theme-assets/**"
+          "**"
         ],
         dest: release()
       },
@@ -183,7 +182,7 @@ module.exports = function (grunt) {
       },
       css: {
         src: assets("/css/patterns.css"),
-        dest: build("/css/patterns.css")
+        dest: build("/pattern-library/assets/css/patterns.css")
       },
       assets: {
         expand: true,
@@ -243,11 +242,11 @@ module.exports = function (grunt) {
     "sass_globbing": {
       sass: {
         src: allPatternStructurePaths("/**/*.scss"),
-        dest: assets("/sass/patternpack-patterns.scss")
+        dest: assets("/sass/patterns.scss")
       },
       less: {
         src: allPatternStructurePaths("/**/*.less"),
-        dest: assets("/less/patternpack-patterns.less")
+        dest: assets("/less/patterns.less")
       }
     },
 
@@ -285,10 +284,14 @@ module.exports = function (grunt) {
           theme("/**/*.{md,hbs}"),
           src("/**/*.{md,hbs}")
         ],
-        tasks: ["assemble:patternlibrary"]
+        tasks: ["assemble-pattern-library"]
       },
       sass: {
         files: src("/**/*.scss"),
+        tasks: ["styles-patterns", "copy:css"]
+      },
+      less: {
+        files: src("/**/*.less"),
         tasks: ["styles-patterns", "copy:css"]
       },
       livereload: {
@@ -343,13 +346,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask("server", ["connect", "watch"]);
 
-  grunt.registerTask("release-patch", ["clean:release", "copy:release", "gitadd", "bump:patch"]);
-  grunt.registerTask("release-minor", ["clean:release", "copy:release", "gitadd", "bump:minor"]);
-  grunt.registerTask("release-major", ["clean:release", "copy:release", "gitadd", "bump:major"]);
+  grunt.registerTask("release-patch", ["build", "clean:release", "copy:release", "gitadd", "bump:patch"]);
+  grunt.registerTask("release-minor", ["build", "clean:release", "copy:release", "gitadd", "bump:minor"]);
+  grunt.registerTask("release-major", ["build", "clean:release", "copy:release", "gitadd", "bump:major"]);
 
   // Main tasks
   grunt.registerTask("integrate", ["build", "copy:integrate"]);
-  grunt.registerTask("release", ["clean:release", "copy:release", "release-patch"]);
+  grunt.registerTask("release", ["build", "clean:release", "copy:release", "release-patch"]);
   grunt.registerTask("build", getBuildTasks(config.publish));
   grunt.registerTask("default", ["build", "server"]);
 };
