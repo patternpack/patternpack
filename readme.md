@@ -72,15 +72,23 @@ Default: `patternpack-example-theme`
 
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
 
-#### cssPreprocessor
+#### css.preProcessor
 Type: `string`  
 Default: `sass`
 Allowed Values: `sass, less, none, ""`
 
 The type of css preprocessor to run.
-> `sass`: runs the sass preprocessor on `assets/sass/patterns.scss`
-> `less`: runs the less preprocessor on `assets/less/patterns.less`
+> `sass`: runs the sass preprocessor on `assets/sass/options.css.fileName.scss`
+> `less`: runs the less preprocessor on `assets/less/options.css.fileName.less`
 > `""` `none`: does not run any css preprocessor
+
+#### css.fileName
+Type: `string`
+Default: `patterns`
+
+The final CSS file you will create that will `import` all your patterns and any other CSS you write. You will manually create this file which will be automatically watched during development and have your configured CSS preprocessor and autoprefixer run on it. Do not add an extension to this file name.
+
+It must live in your configured `assets` directory under a `sass` or `less` subdirectory (e.g., `src/assets/sass/patterns.scss`).
 
 #### publish.library
 Type: `boolean`  
@@ -229,6 +237,10 @@ This example shows all options with their default options.
   build: "./html",
   src: "./src",
   assets: "./src/assets",
+  css: {
+    preProcessor: "sass",
+    fileName: "project"
+  }
   cssPreprocessor: "sass",
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
