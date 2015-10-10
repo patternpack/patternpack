@@ -181,8 +181,8 @@ module.exports = function (grunt) {
         dest: integrate()
       },
       css: {
-        src: assets("/css/patterns.css"),
-        dest: build("/pattern-library/assets/css/patterns.css")
+        src: assets("/css/*.css"),
+        dest: build("/pattern-library/assets/css/")
       },
       assets: {
         expand: true,
@@ -213,8 +213,8 @@ module.exports = function (grunt) {
       patterns: {
         files: [
           {
-            src: assets("/sass/patterns.scss"),
-            dest: assets("/css/patterns.css")
+            src: assets("/sass/" + config.css.fileName + ".scss"),
+            dest: assets("/css/" + config.css.fileName + ".css")
           }
         ]
       }
@@ -229,8 +229,8 @@ module.exports = function (grunt) {
       patterns: {
         files: [
           {
-            src: assets("/less/patterns.less"),
-            dest: assets("/css/patterns.css")
+            src: assets("/less/" + config.css.fileName + ".less"),
+            dest: assets("/css/" + config.css.fileName + ".css")
           }
         ]
       }
@@ -242,11 +242,11 @@ module.exports = function (grunt) {
     "sass_globbing": {
       sass: {
         src: allPatternStructurePaths("/**/*.scss"),
-        dest: assets("/sass/patterns.scss")
+        dest: assets("/sass/_patternpack-patterns.scss")
       },
       less: {
         src: allPatternStructurePaths("/**/*.less"),
-        dest: assets("/less/patterns.less")
+        dest: assets("/less/_patternpack-patterns.less")
       }
     },
 
@@ -340,7 +340,7 @@ module.exports = function (grunt) {
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups
   // and are typically composed together into workflows
-  grunt.registerTask("styles-patterns", getStyleTasks(config.cssPreprocessor));
+  grunt.registerTask("styles-patterns", getStyleTasks(config.css.preProcessor));
   grunt.registerTask("assemble-patterns", ["assemble:patterns"]);
   grunt.registerTask("assemble-pattern-library", ["assemble:patternlibrary", "copy:assets", "copy:themeAssets"]);
 
