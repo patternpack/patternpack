@@ -5,8 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "assemble": "latest",
+    "autoprefixer": "latest",
     "grunt": "latest",
-    "grunt-autoprefixer": "latest",
     "grunt-bump": "latest",
     "grunt-concurrent": "latest",
     "grunt-contrib-clean": "latest",
@@ -16,6 +16,7 @@
     "grunt-contrib-watch": "latest",
     "grunt-git": "latest",
     "grunt-newer": "latest",
+    "grunt-postcss": "latest",
     "grunt-sass": "latest",
     "grunt-sass-globbing": "latest",
     "load-grunt-parent-tasks": "latest",
