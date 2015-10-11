@@ -28,8 +28,6 @@ module.exports = function (grunt) {
 
     // Configure our CSS
     css: {
-      preProcessor: "sass",     // which preprocessor we should use (sass|less|none)
-      fileName: "patterns",      // the name for our final CSS file that will import everything
       autoprefixer: {
         browsers: ['last 2 versions']
       }
