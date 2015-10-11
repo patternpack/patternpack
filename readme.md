@@ -82,6 +82,12 @@ The type of css preprocessor to run.
 > `less`: runs the less preprocessor on `assets/less/patterns.less`
 > `""` `none`: does not run any css preprocessor
 
+#### css.autoprefixer
+Type: `array`,
+Default: `browsers: ['last 2 versions']`
+
+Pass in options to PostCSS Autoprefixer. See the [available options](https://github.com/postcss/autoprefixer#options).
+
 #### publish.library
 Type: `boolean`  
 Default: `true`
@@ -229,7 +235,11 @@ This example shows all options with their default options.
   build: "./html",
   src: "./src",
   assets: "./src/assets",
-  cssPreprocessor: "sass",
+  css: {
+    autoprefixer: {
+      browsers: ['last 2 versions']
+    }
+  }
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
   publish: {
