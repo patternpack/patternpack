@@ -146,7 +146,7 @@ module.exports = function (grunt) {
 
     // Ensure option values are set to acceptable values
     ensureOptions(options, "task", tasksValues);
-    ensureOptions(options.css, "cssPreprocessor", cssPreprocessorValues);
+    ensureOptions(options.css, "preProcessor", cssPreprocessorValues);
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command
