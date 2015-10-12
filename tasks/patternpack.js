@@ -28,6 +28,8 @@ module.exports = function (grunt) {
 
     // Configure our CSS
     css: {
+      preprocessor: "sass",     // which preprocessor we should use (sass|less|none)
+      fileName: "patterns",      // the name for our final CSS file that will import everything
       autoprefixer: {
         browsers: ["last 2 versions"]
       }
@@ -147,7 +149,7 @@ module.exports = function (grunt) {
 
     // Ensure option values are set to acceptable values
     ensureOptions(options, "task", tasksValues);
-    ensureOptions(options, "cssPreprocessor", cssPreprocessorValues);
+    ensureOptions(options.css, "preprocessor", cssPreprocessorValues);
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command
