@@ -340,7 +340,7 @@ module.exports = function (grunt) {
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups
   // and are typically composed together into workflows
-  grunt.registerTask("styles-patterns", getStyleTasks(config.css.preProcessor));
+  grunt.registerTask("styles-patterns", getStyleTasks(config.css.preprocessor));
   grunt.registerTask("assemble-patterns", ["assemble:patterns"]);
   grunt.registerTask("assemble-pattern-library", ["assemble:patternlibrary", "copy:assets", "copy:themeAssets"]);
 
