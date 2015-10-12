@@ -4,6 +4,7 @@ module.exports = function (grunt) {
   var _ = require("lodash");
   var log = require("./gruntLogHelper.js")(grunt);
   var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var autoprefixer = require("autoprefixer");
 
   var gruntFileConfig = basePath + "/gruntfileConfig.json";
   var config = grunt.file.readJSON(gruntFileConfig);
@@ -256,7 +257,7 @@ module.exports = function (grunt) {
       options: {
         map: true,
         processors: [
-          require('autoprefixer')(
+          autoprefixer(
             config.css.autoprefixer
           )
         ]

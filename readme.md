@@ -237,7 +237,7 @@ This example shows all options with their default options.
   assets: "./src/assets",
   css: {
     autoprefixer: {
-      browsers: ['last 2 versions']
+      browsers: ["last 2 versions"]
     }
   }
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
