@@ -72,7 +72,7 @@ Default: `patternpack-example-theme`
 
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
 
-#### css.preProcessor
+#### css.preprocessor
 Type: `string`  
 Default: `sass`
 Allowed Values: `sass, less, none, ""`
@@ -238,7 +238,7 @@ This example shows all options with their default options.
   src: "./src",
   assets: "./src/assets",
   css: {
-    preProcessor: "sass",
+    preprocessor: "sass",
     fileName: "project"
   }
   cssPreprocessor: "sass",
