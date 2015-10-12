@@ -4,6 +4,7 @@ module.exports = function (grunt) {
   var _ = require("lodash");
   var log = require("./gruntLogHelper.js")(grunt);
   var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var autoprefixer = require("autoprefixer");
 
   var gruntFileConfig = basePath + "/gruntfileConfig.json";
   var config = grunt.file.readJSON(gruntFileConfig);
@@ -72,7 +73,7 @@ module.exports = function (grunt) {
   function getStyleTasks(cssPreprocessorConfig) {
     var sassTasks = ["sass_globbing:sass", "sass"];
     var lessTasks = ["sass_globbing:less", "less"];
-    var cssTasks = ["autoprefixer:patterns", "copy:css"];
+    var cssTasks = ["postcss", "copy:css"];
     var tasks = [];
 
     if (cssPreprocessorConfig === "sass") {
@@ -250,30 +251,19 @@ module.exports = function (grunt) {
       }
     },
 
-    autoprefixer: {
+    // Run PostCSS Autoprefixer on any CSS in the assets directory
+    // Using the configured Autoprefixer options (defaults to last 2 versions)
+    postcss: {
       options: {
-        browsers: ["last 2 versions", "ie >= 9"],
-        map: {
-          inline: false
-        }
-      },
-      patternlibrary: {
-        files: [{
-          expand: true,
-          flatten: true,
-          src: build("/pattern-library/assets/css/*.css"),
-          dest: build("/pattern-library/assets/css/")
-        }]
-      },
-      patterns: {
-        files: [
-          {
-            expand: true,
-            flatten: true,
-            src: build("/css/*.css"),
-            dest: build("/css/")
-          }
+        map: true,
+        processors: [
+          autoprefixer(
+            config.css.autoprefixer
+          )
         ]
+      },
+      build: {
+        src: assets("/css/*.css")
       }
     },
 

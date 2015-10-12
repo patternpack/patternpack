@@ -90,6 +90,12 @@ The final CSS file you will create that will `import` all your patterns and any 
 
 It must live in your configured `assets` directory under a `sass` or `less` subdirectory (e.g., `src/assets/sass/patterns.scss`).
 
+#### css.autoprefixer
+Type: `array`,
+Default: `browsers: ['last 2 versions']`
+
+Pass in options to PostCSS Autoprefixer. See the [available options](https://github.com/postcss/autoprefixer#options).
+
 #### publish.library
 Type: `boolean`  
 Default: `true`
@@ -239,9 +245,11 @@ This example shows all options with their default options.
   assets: "./src/assets",
   css: {
     preprocessor: "sass",
-    fileName: "project"
+    fileName: "project",
+    autoprefixer: {
+      browsers: ["last 2 versions"]
+    }
   }
-  cssPreprocessor: "sass",
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
   publish: {
