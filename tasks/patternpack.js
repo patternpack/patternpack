@@ -26,8 +26,11 @@ module.exports = function (grunt) {
     // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
     // task: "build",
 
-    // Configures the css preprocessor (sass|less)
-    cssPreprocessor: "sass",
+    // Configure our CSS
+    css: {
+      preprocessor: "sass",     // which preprocessor we should use (sass|less|none)
+      fileName: "patterns"      // the name for our final CSS file that will import everything
+    },
 
     // Configures the ability to only publish certain resources (css|library|patterns)
     publish: {
@@ -143,7 +146,7 @@ module.exports = function (grunt) {
 
     // Ensure option values are set to acceptable values
     ensureOptions(options, "task", tasksValues);
-    ensureOptions(options, "cssPreprocessor", cssPreprocessorValues);
+    ensureOptions(options.css, "preprocessor", cssPreprocessorValues);
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command
