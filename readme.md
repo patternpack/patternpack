@@ -72,6 +72,16 @@ Default: `patternpack-example-theme`
 
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
 
+#### logo
+Type: `string`
+Default: `/theme-assets/images/pp-logo.svg`
+
+*Note: if you are using a custom `options.theme` value, this option is not necessary*
+
+If you're using the default theme, you can pass in a custom logo to be used with your library. It should be the path to your logo file relative to the build directory (`./html/` if you didn't configure `options.build`). It's recommended to put the logo inside of the `./src/assets/images` directory, and then pass in a value of `/assets/images/yourLogo.png`.
+
+The logo will be resized via CSS to a `max-height` of 30px.
+
 #### css.preprocessor
 Type: `string`  
 Default: `sass`
@@ -252,6 +262,7 @@ This example shows all options with their default options.
   }
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
+  logo: "./theme-assets/images/pp-logo.svg"
   publish: {
     library: true,
     patterns: false
