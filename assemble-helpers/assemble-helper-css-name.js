@@ -3,7 +3,8 @@ module.exports.register = function (Handlebars, options, params) {
 
   var grunt = require("grunt")
 
-  var gruntFileConfig = "../gruntfileConfig.json";
+  var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var gruntFileConfig = basePath + "/gruntfileConfig.json";
   var config = grunt.file.readJSON(gruntFileConfig);
 
   Handlebars.registerHelper("cssFileName", function() {
