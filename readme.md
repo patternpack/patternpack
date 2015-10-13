@@ -262,7 +262,7 @@ This example shows all options with their default options.
   }
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
-  logo: "./theme-assets/images/pp-logo.svg"
+  logo: "./theme-assets/images/pp-logo.svg",
   publish: {
     library: true,
     patterns: false
