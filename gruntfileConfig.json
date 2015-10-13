@@ -4,6 +4,7 @@
   "src": "./src",
   "assets": "./src/assets",
   "theme": "./node_modules/patternpack-example-theme",
+  "logo": "./node_modules/patternpack-example-theme/theme-assets/images/pp-logo.svg",
   "css": {
     "preprocessor": "sass",
     "fileName": "patterns",
