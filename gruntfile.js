@@ -311,12 +311,7 @@ module.exports = function (grunt) {
     }
   });
 
-  // Load the tasks using the load-grunt-parent-tasks module.
-  // This allows the grun tasks to still be loaded when the
-  // calling pattern library happens to contain one of the
-  // dependencies used by pattern pack.  For more info:
-  // https://www.npmjs.com/package/load-grunt-parent-tasks
-  require("load-grunt-parent-tasks")(grunt, {
+  var loadTaskConfig = {
     // The globbing pattern used to locate the desired grunt tasks
     pattern: [
       "grunt-*",
@@ -325,7 +320,24 @@ module.exports = function (grunt) {
     // The list of dependencies to include
     // ["dependencies", "optionalDependencies"]
     scope: ["dependencies"]
-  });
+  };
+
+  // If the root configuration exists it indicates that patternpack is
+  // running from the context of another grunt process.  In this case
+  // we should use load-grunt-parent-tasks to ensure the npm packages
+  // are loaded correctly.  Otherwise, just load the tasks like normal.
+  if (config.root) {
+    // Load the tasks using the load-grunt-parent-tasks module.
+    // This allows the grunt tasks to still be loaded when the
+    // calling pattern library happens to contain one of the
+    // dependencies used by pattern pack.  For more info:
+    // https://www.npmjs.com/package/load-grunt-parent-tasks
+    log.log("load parent tasks");
+    require("load-grunt-parent-tasks")(grunt, loadTaskConfig);
+  } else {
+    log.log("load tasks");
+    require("load-grunt-tasks")(grunt, loadTaskConfig);
+  }
 
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups

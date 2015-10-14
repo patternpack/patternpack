@@ -26,7 +26,8 @@
     "pretty": "latest"
   },
   "devDependencies": {
-    "grunt-eslint": "latest"
+    "grunt-eslint": "latest",
+    "load-grunt-tasks": "latest"
   },
   "repository": {
     "type": "git",
