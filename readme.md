@@ -74,7 +74,7 @@ The name of the npm package (or the path) which contains the PatternPack theme. 
 
 #### logo
 Type: `string`
-Default: `/theme-assets/images/pp-logo.svg`
+Default: `/theme-assets/images/logo.svg`
 
 *Note: if you are using a custom `options.theme` value, this option is not necessary*
 
@@ -262,7 +262,7 @@ This example shows all options with their default options.
   }
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
-  logo: "./theme-assets/images/pp-logo.svg",
+  logo: "./theme-assets/images/logo.svg",
   publish: {
     library: true,
     patterns: false

@@ -21,7 +21,7 @@ module.exports = function (grunt) {
     src: "./src",
     assets: "./src/assets",
     theme: npmPath + "patternpack-example-theme",
-    logo: "/theme-assets/images/pp-logo.svg",
+    logo: "/theme-assets/images/logo.svg",
 
     // Operation to run (default|build|release)
     // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
