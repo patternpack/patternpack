@@ -352,7 +352,7 @@ module.exports = function (grunt) {
 
   // Main tasks
   grunt.registerTask("integrate", ["build", "copy:integrate"]);
-  grunt.registerTask("release", ["build", "clean:release", "copy:release", "release-patch"]);
+  grunt.registerTask("release", ["release-patch"]);
   grunt.registerTask("build", getBuildTasks(config.publish));
   grunt.registerTask("default", ["build", "server"]);
 };
