@@ -22,7 +22,7 @@
     "load-grunt-parent-tasks": "latest",
     "lodash": "latest",
     "merge-defaults": "latest",
-    "patternpack-example-theme": "latest",
+    "patternpack-example-theme": "^1.0.0",
     "pretty": "latest"
   },
   "devDependencies": {
