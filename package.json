@@ -1,7 +1,7 @@
 {
   "name": "patternpack",
   "description": "Generates pattern library content from simple markdown and css",
-  "version": "1.0.2-beta1",
+  "version": "1.0.2-beta2",
   "license": "MIT",
   "dependencies": {
     "assemble": "^0.4.42",
