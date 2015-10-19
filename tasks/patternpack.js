@@ -142,19 +142,53 @@ module.exports = function (grunt) {
   function ensureFilesExist(options) {
     var path = require("path");
 
+    log.verbose("Validating required files exist...");
+
+    // Generate the options.src directory if it doesn't exist
+    var sourceDirectory = options.src;
+    if (!fs.existsSync(sourceDirectory)) {
+      log.verbose("Generating the source directory: " + sourceDirectory);
+      fs.mkdir(sourceDirectory);
+    }
+
+    // Generate the options.assets directory if it doesn't exist
+    var assetsDirectory = options.assets;
+    if (!fs.existsSync(assetsDirectory)) {
+      log.verbose("Generating the assets directory: " + assetsDirectory);
+      fs.mkdir(assetsDirectory);
+    }
+
     // Create core css file if it does not exist
-    var coreCssPath = options.assets + "/" + options.css.preprocessor + "/" + options.css.fileName + "." + options.css.preprocessor;
+    var coreCssDirectory = assetsDirectory + "/" + options.css.preprocessor;
+    var coreCssExtension = options.css.preprocessor;
+    if (options.css.preprocessor === "sass") {    // convert file extension to scss if sass is passed in
+      coreCssExtension = "scss";
+    }
+    var coreCssFileName = options.css.fileName + "." + coreCssExtension;
+
+    var coreCssPath = coreCssDirectory + "/" + coreCssFileName;
     if (!fs.existsSync(coreCssPath)) {
-      fs.writeFileSync(coreCssPath, '@import "_patternpack-patterns"');
+      log.verbose("Generating the core CSS file: " + coreCssPath);
+      fs.mkdir(coreCssDirectory);
+      fs.writeFileSync(coreCssPath, '@import "patternpack-patterns";');
     }
 
     // Create the dirctories for the pattern structure if they do not exist
     _.each(options.patternStructure, function(pattern) {
       var patternPath = options.src + "/" + pattern.path;
       if (!fs.existsSync(patternPath)) {
+        log.verbose("Generating the " + patternpath + " patterns directory");
         fs.mkdir(patternPath);
       }
     });
+
+    // Generate a placeholder index.md file
+    // TODO: Move this to a templates folder
+    var indexFile = sourceDirectory + "/index.md";
+    if (!fs.existsSync(indexFile)) {
+      log.verbose("Generating the core CSS file: " + coreCssPath);
+      fs.writeFileSync(indexFile, '# Welcome to PatternPack');
+    }
   }
 
   function gruntPatternPackTask() {
