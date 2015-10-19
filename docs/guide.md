@@ -115,3 +115,38 @@ This will:
 - Build your Pattern Library in a temporary directory, `./html` or whatever you configured in your [`options.build`](https://github.com/patternpack/patternpack#build).
 - Start up a web server at `http://localhost:8888/`
 - Start up a watch task to auto build any changes
+
+## Adding a Pattern
+*Note that due to limitations in `grunt-watch`, you will need to restart PatternPack every time you add a new file for the watch to recognize it. Once it sees it, all changes with automatically reload.*
+
+Patterns are composed of two files:
+
+- A Markdown (`*.md`) file that contains all the content for a documentation page
+- A Sass/LESS file with the styles for that pattern
+
+To get started, add those two files into one of your Structure folders (if you kept the defaults, it'll be `./src/atoms`, `./src/molecules`, and `./src/templates`).
+
+It is recommended to use the following template for the Markdown file:
+
+```md
+---
+title: Buttons
+---
+
+# Buttons
+Insert your documentation here
+
+## Example
+<div class="library__example">
+  Insert your live example here
+</div>
+
+## Code
+
+Insert your code example here
+TODO: INSERT BACKTICKS - HOW DO I ESCAPE THEM??
+```
+
+However, you are able to put whatever content you'd like in here. It is recommended to put your example inside `<div class="library__example">` because this strips out the default PatternPack styling from your example.
+
+The matching Sass/LESS file(s) will be globbed into a file called `_patternpack-patterns.scss or .less`. By default when you generate PatternPack for the first time, you will also get a `patterns.scss or .less` file (or what you configure in [`options.css.fileName`](https://github.com/patternpack/patternpack#cssfilename)) that will `@import` the `_patternpack-patterns` file.
