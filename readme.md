@@ -16,6 +16,26 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('patternpack');
 ```
 
+A basic `gruntfile.js` for PatternPack should look like:
+
+```
+module.exports = function (grunt) {
+  grunt.initConfig({
+    patternpack: {
+      run: {},
+      build: {},
+      release: {}
+    }
+  });
+
+  grunt.loadNpmTasks('patternpack');
+
+  grunt.registerTask('default', ['patternpack:run']);
+}
+```
+
+Running `grunt` with this will auto-generate all necessary files on initial run.
+
 ## PatternPack Task
 _Run this task with the `grunt patternpack` command._
 
@@ -61,7 +81,7 @@ A release performs the following actions
 * Commits the changes with the version number as the message
 
 #### assets
-Type: `string`
+Type: `string`  
 Default: `./src/assets`
 
 A folder to house any additional assets to be shared across projects (e.g., fonts, icons, images, etc.).
@@ -73,7 +93,7 @@ Default: `patternpack-example-theme`
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
 
 #### logo
-Type: `string`
+Type: `string`  
 Default: `/theme-assets/images/logo.svg`
 
 *Note: if you are using a custom `options.theme` value, this option is not necessary*
@@ -93,7 +113,7 @@ The type of css preprocessor to run.
 > `""` `none`: does not run any css preprocessor
 
 #### css.fileName
-Type: `string`
+Type: `string`  
 Default: `patterns`
 
 The final CSS file you will create that will `import` all your patterns and any other CSS you write. You will manually create this file which will be automatically watched during development and have your configured CSS preprocessor and autoprefixer run on it. Do not add an extension to this file name.
@@ -101,7 +121,7 @@ The final CSS file you will create that will `import` all your patterns and any 
 It must live in your configured `assets` directory under a `sass` or `less` subdirectory (e.g., `src/assets/sass/patterns.scss`).
 
 #### css.autoprefixer
-Type: `array`,
+Type: `array`  
 Default: `browsers: ['last 2 versions']`
 
 Pass in options to PostCSS Autoprefixer. See the [available options](https://github.com/postcss/autoprefixer#options).
@@ -150,7 +170,7 @@ For example:
 ```
 
 #### integrate
-Type: `string`
+Type: `string`  
 Default: none
 
 Configures a directory where library builds will copy when running the `patternpack:integrate` command. Note that it is not recommended to configure this in your gruntfile when sharing across a team. Instead, use the `.patternpackrc` [method below](#user-specific-settings-override).
@@ -290,11 +310,10 @@ The `patternpack:build` task does not run the webserver or monitor for changes. 
 In order to release a new version of a pattern library you create with PatternPack, the following sequence of commands should be executed.
 
 ```
-grunt patternpack:build
 grunt patternpack:release
 git push --follow-tags
 ```
 
-`grunt patternpack:build` tells pattern pack to generate the pattern library. In most cases this will done during the pattern development process. `grunt patternpack:release` increments the version of the pattern library, copies the pattern library to the release location, commits the code and tags the git repo with the new version number. `git push --follow-tags` pushes the code changes to the origin and the newly added tag.
+`grunt patternpack:release` generates the pattern library, increments the version, copies the pattern library to the release location, commits the code and tags the git repo with the new version number. `git push --follow-tags` pushes the code changes to the origin and the newly added tag.
 
 Once released your application should be able to reference the newly tagged version of the pattern library to utilize the new patterns.
