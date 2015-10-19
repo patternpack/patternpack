@@ -71,8 +71,7 @@ module.exports = function (grunt) {
     return _.defaultsDeep(_.cloneDeep(overrideValue), value);
   }
 
-  function setupOptions(context) {
-    var path = require("path");
+  function getOptions(context) {
     var options = {};
     var optionOverrides = context.options();
     var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
@@ -89,6 +88,25 @@ module.exports = function (grunt) {
     options = applyOverrides(optionDefaults, optionOverrides);
     options = applyOverrides(options, optionOverridesFile);
 
+    // Resolve the theme path either from a path or from a package name
+    if (optionOverrides.theme) {
+      optionOverrides.theme = getPackagePathOrFallbackPath(optionOverrides.theme);
+    }
+    log.verbose("Theme paths");
+    log.verbose("Default: " + optionDefaults.theme);
+    log.verbose("Override: " + optionOverrides.theme);
+
+    // If the pattern is specified by the user then get the relative path,
+    // otherwise use the path inside pattern pack to provide the default patterns.
+    options.theme = optionOverrides.theme ? path.relative(packagePath, optionOverrides.theme) : optionDefaults.theme;
+    log.verbose("Resolved: " + options.theme);
+
+    return options;
+  }
+
+  function transformOptions(options) {
+    var path = require("path");
+
     // Add the relative path to the root of the calling pattern library
     options.root = path.relative(packagePath, "");
 
@@ -102,19 +120,6 @@ module.exports = function (grunt) {
     if (options.integrate) {
       options.integrate = path.relative(packagePath, options.integrate);
     }
-
-    // Resolve the theme path either from a path or from a package name
-    if (optionOverrides.theme) {
-      optionOverrides.theme = getPackagePathOrFallbackPath(optionOverrides.theme);
-    }
-    log.verbose("Theme paths");
-    log.verbose("Default: " + optionDefaults.theme);
-    log.verbose("Override: " + optionOverrides.theme);
-
-    // If the pattern is specified by the user then get the relative path,
-    // otherwise use the path inside pattern pack to provide the default patterns.
-    options.theme = optionOverrides.theme ? path.relative(packagePath, optionOverrides.theme) : optionDefaults.theme;
-    log.verbose("Resolved: " + options.theme);
 
     return options;
   }
@@ -134,6 +139,24 @@ module.exports = function (grunt) {
     }
   }
 
+  function ensureFilesExist(options) {
+    var path = require("path");
+
+    // Create core css file if it does not exist
+    var coreCssPath = options.assets + "/" + options.css.preprocessor + "/" + options.css.fileName + "." + options.css.preprocessor;
+    if (!fs.existsSync(coreCssPath)) {
+      fs.writeFileSync(coreCssPath, '@import "_patternpack-patterns"');
+    }
+
+    // Create the dirctories for the pattern structure if they do not exist
+    _.each(options.patternStructure, function(pattern) {
+      var patternPath = options.src + "/" + pattern.path;
+      if (!fs.existsSync(patternPath)) {
+        fs.mkdir(patternPath);
+      }
+    });
+  }
+
   function gruntPatternPackTask() {
     var done = this.async();
 
@@ -144,13 +167,18 @@ module.exports = function (grunt) {
     }
 
     // Get the options
-    var options = setupOptions(this);
-    log.verbose("PatternPack options:");
-    log.verbose(options);
+    var options = getOptions(this);
 
     // Ensure option values are set to acceptable values
+    // and files/directories are present
     ensureOptions(options, "task", tasksValues);
     ensureOptions(options.css, "preprocessor", cssPreprocessorValues);
+    ensureFilesExist(options);
+
+    // Change the options to be relative to the patternpackage package
+    options = transformOptions(options);
+    log.verbose("PatternPack options:");
+    log.verbose(options);
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command
