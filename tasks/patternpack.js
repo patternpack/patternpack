@@ -154,7 +154,7 @@ module.exports = function (grunt) {
     if (!fs.existsSync(coreCssPath)) {
       log.verbose("Generating the core CSS file: " + coreCssPath);
       mkdirp.sync(coreCssDirectory);
-      fs.writeFileSync(coreCssPath, '@import "patternpack-patterns";');
+      fs.writeFileSync(coreCssPath, '@import "_patternpack-patterns";');    // TODO: Make this a template based on Sass/LESS - LESS requires the underscore
     }
 
     // Create the dirctories for the pattern structure if they do not exist
