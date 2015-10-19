@@ -4,7 +4,14 @@
   "src": "./src",
   "assets": "./src/assets",
   "theme": "./node_modules/patternpack-example-theme",
-  "cssPreprocessor": "sass",
+  "logo": "/theme-assets/images/logo.svg",
+  "css": {
+    "preprocessor": "sass",
+    "fileName": "patterns",
+    "autoprefixer": {
+      "browsers": ["last 2 versions"]
+    }
+  },
   "publish": {
     "library": true,
     "patterns": false

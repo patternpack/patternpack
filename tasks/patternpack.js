@@ -21,13 +21,20 @@ module.exports = function (grunt) {
     src: "./src",
     assets: "./src/assets",
     theme: npmPath + "patternpack-example-theme",
+    logo: "/theme-assets/images/logo.svg",
 
     // Operation to run (default|build|release)
     // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
     // task: "build",
 
-    // Configures the css preprocessor (sass|less)
-    cssPreprocessor: "sass",
+    // Configure our CSS
+    css: {
+      preprocessor: "sass",     // which preprocessor we should use (sass|less|none)
+      fileName: "patterns",      // the name for our final CSS file that will import everything
+      autoprefixer: {
+        browsers: ["last 2 versions"]
+      }
+    },
 
     // Configures the ability to only publish certain resources (css|library|patterns)
     publish: {
@@ -64,8 +71,7 @@ module.exports = function (grunt) {
     return _.defaultsDeep(_.cloneDeep(overrideValue), value);
   }
 
-  function setupOptions(context) {
-    var path = require("path");
+  function getOptions(context) {
     var options = {};
     var optionOverrides = context.options();
     var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
@@ -82,6 +88,25 @@ module.exports = function (grunt) {
     options = applyOverrides(optionDefaults, optionOverrides);
     options = applyOverrides(options, optionOverridesFile);
 
+    // Resolve the theme path either from a path or from a package name
+    if (optionOverrides.theme) {
+      optionOverrides.theme = getPackagePathOrFallbackPath(optionOverrides.theme);
+    }
+    log.verbose("Theme paths");
+    log.verbose("Default: " + optionDefaults.theme);
+    log.verbose("Override: " + optionOverrides.theme);
+
+    // If the pattern is specified by the user then get the relative path,
+    // otherwise use the path inside pattern pack to provide the default patterns.
+    options.theme = optionOverrides.theme ? path.relative(packagePath, optionOverrides.theme) : optionDefaults.theme;
+    log.verbose("Resolved: " + options.theme);
+
+    return options;
+  }
+
+  function transformOptions(options) {
+    var path = require("path");
+
     // Add the relative path to the root of the calling pattern library
     options.root = path.relative(packagePath, "");
 
@@ -95,19 +120,6 @@ module.exports = function (grunt) {
     if (options.integrate) {
       options.integrate = path.relative(packagePath, options.integrate);
     }
-
-    // Resolve the theme path either from a path or from a package name
-    if (optionOverrides.theme) {
-      optionOverrides.theme = getPackagePathOrFallbackPath(optionOverrides.theme);
-    }
-    log.verbose("Theme paths");
-    log.verbose("Default: " + optionDefaults.theme);
-    log.verbose("Override: " + optionOverrides.theme);
-
-    // If the pattern is specified by the user then get the relative path,
-    // otherwise use the path inside pattern pack to provide the default patterns.
-    options.theme = optionOverrides.theme ? path.relative(packagePath, optionOverrides.theme) : optionDefaults.theme;
-    log.verbose("Resolved: " + options.theme);
 
     return options;
   }
@@ -127,6 +139,40 @@ module.exports = function (grunt) {
     }
   }
 
+  function ensureFilesExist(options) {
+    // TODO: File generation should be enhanced to use templates rather than
+    //       the current implementation that generates the files inline.
+    var path = require("path");
+    var mkdirp = require("mkdirp");
+
+    // Create core css file if it does not exist
+    var coreCssExtension = options.css.preprocessor === "sass" ? "scss" : options.css.preprocessor;
+    var coreCssFileName = options.css.fileName + "." + coreCssExtension;
+    var coreCssDirectory = options.assets + "/" + options.css.preprocessor;
+    var coreCssPath = coreCssDirectory + "/" + coreCssFileName;
+
+    if (!fs.existsSync(coreCssPath)) {
+      log.verbose("Generating the core CSS file: " + coreCssPath);
+      mkdirp.sync(coreCssDirectory);
+      fs.writeFileSync(coreCssPath, '@import "_patternpack-patterns";');    // TODO: Make this a template based on Sass/LESS - LESS requires the underscore
+    }
+
+    // Create the dirctories for the pattern structure if they do not exist
+    _.each(options.patternStructure, function(pattern) {
+      if (!fs.existsSync(options.src + "/" + pattern.path)) {
+        log.verbose("Generating the pattern directory: " + options.src + "/" + pattern.path);
+        fs.mkdir(options.src + "/" + pattern.path);
+      }
+    });
+
+    // Generate a placeholder index.md file
+    var indexFile = options.src + "/index.md";
+    if (!fs.existsSync(indexFile)) {
+      log.verbose("Generating the index file: " + coreCssPath);
+      fs.writeFileSync(indexFile, '# Welcome to PatternPack');
+    }
+  }
+
   function gruntPatternPackTask() {
     var done = this.async();
 
@@ -137,13 +183,18 @@ module.exports = function (grunt) {
     }
 
     // Get the options
-    var options = setupOptions(this);
-    log.verbose("PatternPack options:");
-    log.verbose(options);
+    var options = getOptions(this);
 
     // Ensure option values are set to acceptable values
+    // and files/directories are present
     ensureOptions(options, "task", tasksValues);
-    ensureOptions(options, "cssPreprocessor", cssPreprocessorValues);
+    ensureOptions(options.css, "preprocessor", cssPreprocessorValues);
+    ensureFilesExist(options);
+
+    // Change the options to be relative to the patternpackage package
+    options = transformOptions(options);
+    log.verbose("PatternPack options:");
+    log.verbose(options);
 
     // Save the options
     // Since I haven"t figured out how to pass the options from the command

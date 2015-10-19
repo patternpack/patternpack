@@ -4,6 +4,7 @@ module.exports = function (grunt) {
   var _ = require("lodash");
   var log = require("./gruntLogHelper.js")(grunt);
   var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var autoprefixer = require("autoprefixer");
 
   var gruntFileConfig = basePath + "/gruntfileConfig.json";
   var config = grunt.file.readJSON(gruntFileConfig);
@@ -72,7 +73,7 @@ module.exports = function (grunt) {
   function getStyleTasks(cssPreprocessorConfig) {
     var sassTasks = ["sass_globbing:sass", "sass"];
     var lessTasks = ["sass_globbing:less", "less"];
-    var cssTasks = ["autoprefixer:patterns", "copy:css"];
+    var cssTasks = ["postcss", "copy:css"];
     var tasks = [];
 
     if (cssPreprocessorConfig === "sass") {
@@ -181,8 +182,12 @@ module.exports = function (grunt) {
         dest: integrate()
       },
       css: {
-        src: assets("/css/patterns.css"),
-        dest: build("/pattern-library/assets/css/patterns.css")
+        expand: true,
+        cwd: assets(),
+        src: [
+          "css/**"
+        ],
+        dest: build("/pattern-library/assets")
       },
       assets: {
         expand: true,
@@ -213,8 +218,8 @@ module.exports = function (grunt) {
       patterns: {
         files: [
           {
-            src: assets("/sass/patterns.scss"),
-            dest: assets("/css/patterns.css")
+            src: assets("/sass/" + config.css.fileName + ".scss"),
+            dest: assets("/css/" + config.css.fileName + ".css")
           }
         ]
       }
@@ -229,8 +234,8 @@ module.exports = function (grunt) {
       patterns: {
         files: [
           {
-            src: assets("/less/patterns.less"),
-            dest: assets("/css/patterns.css")
+            src: assets("/less/" + config.css.fileName + ".less"),
+            dest: assets("/css/" + config.css.fileName + ".css")
           }
         ]
       }
@@ -242,38 +247,27 @@ module.exports = function (grunt) {
     "sass_globbing": {
       sass: {
         src: allPatternStructurePaths("/**/*.scss"),
-        dest: assets("/sass/patterns.scss")
+        dest: assets("/sass/_patternpack-patterns.scss")
       },
       less: {
         src: allPatternStructurePaths("/**/*.less"),
-        dest: assets("/less/patterns.less")
+        dest: assets("/less/_patternpack-patterns.less")
       }
     },
 
-    autoprefixer: {
+    // Run PostCSS Autoprefixer on any CSS in the assets directory
+    // Using the configured Autoprefixer options (defaults to last 2 versions)
+    postcss: {
       options: {
-        browsers: ["last 2 versions", "ie >= 9"],
-        map: {
-          inline: false
-        }
-      },
-      patternlibrary: {
-        files: [{
-          expand: true,
-          flatten: true,
-          src: build("/pattern-library/assets/css/*.css"),
-          dest: build("/pattern-library/assets/css/")
-        }]
-      },
-      patterns: {
-        files: [
-          {
-            expand: true,
-            flatten: true,
-            src: build("/css/*.css"),
-            dest: build("/css/")
-          }
+        map: true,
+        processors: [
+          autoprefixer(
+            config.css.autoprefixer
+          )
         ]
+      },
+      build: {
+        src: assets("/css/*.css")
       }
     },
 
@@ -321,12 +315,7 @@ module.exports = function (grunt) {
     }
   });
 
-  // Load the tasks using the load-grunt-parent-tasks module.
-  // This allows the grun tasks to still be loaded when the
-  // calling pattern library happens to contain one of the
-  // dependencies used by pattern pack.  For more info:
-  // https://www.npmjs.com/package/load-grunt-parent-tasks
-  require("load-grunt-parent-tasks")(grunt, {
+  var loadTaskConfig = {
     // The globbing pattern used to locate the desired grunt tasks
     pattern: [
       "grunt-*",
@@ -335,12 +324,29 @@ module.exports = function (grunt) {
     // The list of dependencies to include
     // ["dependencies", "optionalDependencies"]
     scope: ["dependencies"]
-  });
+  };
+
+  // If the root configuration exists it indicates that patternpack is
+  // running from the context of another grunt process.  In this case
+  // we should use load-grunt-parent-tasks to ensure the npm packages
+  // are loaded correctly.  Otherwise, just load the tasks like normal.
+  if (config.root) {
+    // Load the tasks using the load-grunt-parent-tasks module.
+    // This allows the grunt tasks to still be loaded when the
+    // calling pattern library happens to contain one of the
+    // dependencies used by pattern pack.  For more info:
+    // https://www.npmjs.com/package/load-grunt-parent-tasks
+    log.log("load parent tasks");
+    require("load-grunt-parent-tasks")(grunt, loadTaskConfig);
+  } else {
+    log.log("load tasks");
+    require("load-grunt-tasks")(grunt, loadTaskConfig);
+  }
 
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups
   // and are typically composed together into workflows
-  grunt.registerTask("styles-patterns", getStyleTasks(config.cssPreprocessor));
+  grunt.registerTask("styles-patterns", getStyleTasks(config.css.preprocessor));
   grunt.registerTask("assemble-patterns", ["assemble:patterns"]);
   grunt.registerTask("assemble-pattern-library", ["assemble:patternlibrary", "copy:assets", "copy:themeAssets"]);
 

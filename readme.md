@@ -72,15 +72,39 @@ Default: `patternpack-example-theme`
 
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
 
-#### cssPreprocessor
+#### logo
+Type: `string`
+Default: `/theme-assets/images/logo.svg`
+
+*Note: if you are using a custom `options.theme` value, this option is not necessary*
+
+If you're using the default theme, you can pass in a custom logo to be used with your library. It should be the path to your logo file relative to the build directory (`./html/` if you didn't configure `options.build`). It's recommended to put the logo inside of the `./src/assets/images` directory, and then pass in a value of `/assets/images/yourLogo.png`.
+
+The logo will be resized via CSS to a `max-height` of 30px.
+
+#### css.preprocessor
 Type: `string`  
 Default: `sass`
 Allowed Values: `sass, less, none, ""`
 
 The type of css preprocessor to run.
-> `sass`: runs the sass preprocessor on `assets/sass/patterns.scss`
-> `less`: runs the less preprocessor on `assets/less/patterns.less`
+> `sass`: runs the sass preprocessor on `assets/sass/options.css.fileName.scss`
+> `less`: runs the less preprocessor on `assets/less/options.css.fileName.less`
 > `""` `none`: does not run any css preprocessor
+
+#### css.fileName
+Type: `string`
+Default: `patterns`
+
+The final CSS file you will create that will `import` all your patterns and any other CSS you write. You will manually create this file which will be automatically watched during development and have your configured CSS preprocessor and autoprefixer run on it. Do not add an extension to this file name.
+
+It must live in your configured `assets` directory under a `sass` or `less` subdirectory (e.g., `src/assets/sass/patterns.scss`).
+
+#### css.autoprefixer
+Type: `array`,
+Default: `browsers: ['last 2 versions']`
+
+Pass in options to PostCSS Autoprefixer. See the [available options](https://github.com/postcss/autoprefixer#options).
 
 #### publish.library
 Type: `boolean`  
@@ -229,9 +253,16 @@ This example shows all options with their default options.
   build: "./html",
   src: "./src",
   assets: "./src/assets",
-  cssPreprocessor: "sass",
+  css: {
+    preprocessor: "sass",
+    fileName: "project",
+    autoprefixer: {
+      browsers: ["last 2 versions"]
+    }
+  }
   integrate: "../patternpack-example-app/node_modules/patternpack-example-library",
   theme: "./node_modules/patternpack-example-theme",
+  logo: "./theme-assets/images/logo.svg",
   publish: {
     library: true,
     patterns: false
