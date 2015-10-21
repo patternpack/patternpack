@@ -126,7 +126,7 @@ Patterns are composed of two files:
 
 To get started, add those two files into one of your Structure folders (if you kept the defaults, it'll be `./src/atoms`, `./src/molecules`, and `./src/templates`).
 
-It is recommended to use the following template for the Markdown file:
+You can put anything you'd like for the documentation page in the Markdown file, but a good starting point is this template:
 
 ```md
 ---
@@ -147,6 +147,64 @@ Insert your code example here
 TODO: INSERT BACKTICKS - HOW DO I ESCAPE THEM??
 ```
 
-However, you are able to put whatever content you'd like in here. It is recommended to put your example inside `<div class="library__example">` because this strips out the default PatternPack styling from your example.
+The `<div class="library__example">` strips out the default PatternPack styling from your example.
 
 The matching Sass/LESS file(s) will be globbed into a file called `_patternpack-patterns.scss or .less`. By default when you generate PatternPack for the first time, you will also get a `patterns.scss or .less` file (or what you configure in [`options.css.fileName`](https://github.com/patternpack/patternpack#cssfilename)) that will `@import` the `_patternpack-patterns` file.
+
+## Releasing Your Code
+PatternPack's most powerful feature is the ability to easily version and release your code, which allows other applications to pull in your styles and lock them to a specific version, preventing unexpected changes.
+
+*Note: The versioning and release process is built on the assumption you are using Git as your source control system. At this time, SVN, Mercurial, TFS (without Git), and others are not supported. However, because the assumption is that PatternPack will live in its own repository, you can set up a separate Git-based project without interrupting your app's development workflow.*
+
+In the default `grunt` configuration, you have a `patternpack:run` task. This task does a few things:
+
+1. Generates a new build in the `./dist` directory (or whatever you configured in [`options.release`](https://github.com/patternpack/patternpack#release)).
+1. Bumps the version number in the `package.json` file
+1. Commits all files in a new commit titled `Release v#.#.#`
+1. Tags the commit `v#.#.#`
+
+The release process follows [Semantic Versioning principles](http://semver.org/).
+
+### Adding All Release Tasks
+By default, the `patternpack:release` task does a patch (i.e., `v1.0.x`) release. To enable minor, and major releases you'll have to modify your `gruntfile.js` to include those tasks:
+
+```
+```js
+module.exports = function (grunt) {
+  grunt.initConfig({
+    patternpack: {
+      run: {},
+      build: {},
+      release: {},
+      "release-patch": {},
+      "release-minor": {},
+      "release-major": {}
+    }
+  });
+
+  grunt.loadNpmTasks('patternpack');
+
+  grunt.registerTask('default', ['patternpack:run']);
+}
+```
+
+The three new tasks, `patternpack:release-patch`, `patternpack:release-minor`, `patternpack:release-major` can be run to increment the desired version.
+
+### Creating a Release
+Before running the command, you'll want a clean working copy (i.e., no uncommitted changes) since the release tasks will stage and commit all files (it runs the equivalent of `git add . && git commit`).
+
+Once you run the command, you'll want to review all your changes in the new commit to ensure all your intended changes are in there. Your release files show up in the folder configured with [`options.release`](https://github.com/patternpack/patternpack#release)) (`./dist` by default).
+
+Once you're ready to push, you'll need to push your commit *and* tags: `git push --folow-tags`. At this point, your changes are published, versioned, and ready to be consumed by one or more applications.
+
+### Integrating PatternPack With Your Application(s)
+The central idea behind PatternPack is that you extract the styles from your application, house them in a central repository, and then have one or multiple applications take a dependency on those styles.
+
+PatternPack builds an [npm](https://www.npmjs.com) or [bower](http://bower.io) compatible project, so integrating your pattern library is as simple as `npm install my-awesome-pattern-library`.
+
+If you don't want to publish your library as a public NPM package, you have a few options:
+
+* [NPM Private Modules](https://www.npmjs.com/private-modules)
+* You can [point to a Git repository as your dependency](https://docs.npmjs.com/files/package.json#git-urls-as-dependencies)
+
+Once you've installed your library, you can simply point your project to the generated CSS file inside your `node_modules` or `bower_components`. Be sure to use the file inside the `dist/` directory. You might even consider using a [.npmignore](https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package) to exclude your source and build folders from an npm or bower installation.
