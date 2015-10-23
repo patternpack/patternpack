@@ -61,7 +61,7 @@ There are a few options you might want to customize early on based on your needs
 ## Hello, PatternPack!
 Once you're done configuring PatternPack, you're ready to start it up for the first time. Open a command prompt and you have two options:
 
-```bash
+```shell
 $ grunt patternpack:run
 # Or if you set up a default grunt task that points at patternpack:run
 $ grunt
@@ -164,7 +164,7 @@ $ git push --folow-tags
 ```
 
 ### Integrating PatternPack With Your Application(s)
-The central idea behind PatternPack is that you extract the styles from your application, house them in a central repository, and then have one or multiple applications take a dependency on those styles.
+One of PatternPack's most powerful features is to extract the styles from your application, house them in a central repository, and then have one or multiple applications take a dependency on those styles.
 
 PatternPack builds an [npm](https://www.npmjs.com) or [bower](http://bower.io) compatible project, so integrating your pattern library is as simple as `npm install my-awesome-pattern-library`.
 
