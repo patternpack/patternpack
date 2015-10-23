@@ -1,4 +1,4 @@
-# Getting Started with PatternPack
+# Tutorial
 
 ## Creating a New PatternPack
 PatternPack enables you to build a design system, document your patterns, and share the code from a central repository. The styles can be easily pulled into an application, or even shared with multiple projects.
