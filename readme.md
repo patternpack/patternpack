@@ -12,13 +12,13 @@ npm install patternpack --save-dev
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
-```js
+```javascript
 grunt.loadNpmTasks('patternpack');
 ```
 
 A basic `gruntfile.js` for PatternPack should look like:
 
-```
+```javascript
 module.exports = function (grunt) {
   grunt.initConfig({
     patternpack: {
@@ -35,6 +35,8 @@ module.exports = function (grunt) {
 ```
 
 Running `grunt` with this will auto-generate all necessary files on initial run.
+
+To learn more about PatternPack, check out the [Guides and Resources](https://github.com/patternpack/patternpack/blob/master/docs/docs.md).
 
 ## PatternPack Task
 _Run this task with the `grunt patternpack` command._
@@ -143,7 +145,7 @@ _This option can be useful if you would like to integrate patterns directly into
 #### patternStructure
 Type: `Array`  
 Default:
-```js
+```javascript
 [
   { "name": "Atoms", "path": "atoms" },
   { "name": "Molecules", "path": "molecules" },
@@ -163,7 +165,7 @@ See the options in [`grunt-connect`](https://github.com/gruntjs/grunt-contrib-co
 
 For example:
 
-```js
+```javascript
   server: {
     port: 5555
   }
@@ -180,7 +182,7 @@ Configures a directory where library builds will copy when running the `patternp
 #### Basic usage
 This is an example of the most minimal configuration possible for PatternPack. If the default conventions are followed, minimal grunt configuration is required.
 
-```js
+```javascript
 patternpack: {
   run: {},
   build: {},
@@ -195,7 +197,7 @@ patternpack: {
 #### Custom task names
 This example shows how task names can be customized. Configuring the the `task` option specifies what action PatternPack will take when the custom task is called.
 
-```js
+```javascript
 patternpack: {
   customDev: {
     task: 'default' // builds the application and runs the server
@@ -212,7 +214,7 @@ patternpack: {
 #### Custom file locations
 This example demonstrates how to configure PatternPack to point to different file locations for the patterns, and then output the resulting pattern library to a custom location.
 
-```js
+```javascript
 patternpack: {
   options: {
     src: './path/to/patterns',
@@ -225,7 +227,7 @@ patternpack: {
 #### Custom pattern structure
 Using the `patternStructure` option, you are able to configure the categories you will put your patterns in. In this case `components`, `modules`, `templates` and `pages`.
 
-```js
+```javascript
 patternpack: {
   options: {
     patternStructure: [
@@ -254,7 +256,7 @@ An individual developer can override any option in the `patternpack` task by cre
 
 For example, to override the server configuration, set up a `.patternpackrc` file:
 
-```
+```javascript
 {
   "server": {
     "port": 1234
@@ -267,7 +269,7 @@ Note that this file should be conforming JSON, so all strings should be wrapped 
 #### All available options
 This example shows all options with their default options.
 
-```js
+```javascript
 {
   release: "./dist",
   build: "./html",
@@ -309,9 +311,9 @@ The `patternpack:build` task does not run the webserver or monitor for changes. 
 ### Pattern Library Release
 In order to release a new version of a pattern library you create with PatternPack, the following sequence of commands should be executed.
 
-```
-grunt patternpack:release
-git push --follow-tags
+```shell
+$ grunt patternpack:release
+$ git push --follow-tags
 ```
 
 `grunt patternpack:release` generates the pattern library, increments the version, copies the pattern library to the release location, commits the code and tags the git repo with the new version number. `git push --follow-tags` pushes the code changes to the origin and the newly added tag.
