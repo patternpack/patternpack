@@ -1,6 +1,6 @@
 # Getting Started with PatternPack
 
-## Create Your pattern library
+## Create Your Pattern Library
 There a three ways to build a new pattern library with PatternPack:
 
 - Use the [example library](https://github.com/patternpack/patternpack-example-library) as a starting point ([documentation](https://github.com/patternpack/patternpack/blob/master/docs/getting-started.md#start-with-the-example-pattern-library))
