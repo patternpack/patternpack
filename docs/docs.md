@@ -5,6 +5,9 @@ PatternPack can do a lot for you. The getting started guide is the best place to
 - [Getting Started](https://github.com/patternpack/patternpack/blob/master/docs/getting-started.md)
 - [Tutorial](https://github.com/patternpack/patternpack/blob/master/docs/tutorial.md)
 
+## Documentation
+- [PatternPack Documentation](https://github.com/patternpack/patternpack/blob/master/readme.md)
+
 ## Guides
 - *coming soon* - Building a Custom Theme
 - *coming soon* - Integrating PatternPack with an existing project's CSS
