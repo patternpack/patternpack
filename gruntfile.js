@@ -121,7 +121,7 @@ module.exports = function (grunt) {
     assemble: {
       options: {
         patternStructure: config.patternStructure,
-        helpers: ["assemble-helpers/assemble-helper-*.js"],
+        helpers: [theme("/assemble-helpers/*.js"), "assemble-helpers/assemble-helper-*.js"],
         partials: theme("/partials/*.hbs"),
         postprocess: require("pretty")
       },
