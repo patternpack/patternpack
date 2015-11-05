@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
   "use strict";
+
   var log = require("../gruntLogHelper.js")(grunt);
   var fs = require("fs");
   var path = require("path");
