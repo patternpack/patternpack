@@ -3,12 +3,13 @@ module.exports = function (grunt) {
 
   var log = require("../gruntLogHelper.js")(grunt);
   var fs = require("fs");
+  var path = require("path");
   var _ = require("lodash");
   _.defaultsDeep = require("merge-defaults"); // Add deep defaults capabilities to lodash
 
   var npmPath = "./node_modules/";
   var packageName = "patternpack";
-  var packagePath = npmPath + packageName;
+  var packagePath = "./" + path.relative(process.cwd(), path.dirname(__dirname));
   var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "", undefined];
   var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
@@ -20,7 +21,7 @@ module.exports = function (grunt) {
     build: "./html",
     src: "./src",
     assets: "./src/assets",
-    theme: npmPath + "patternpack-example-theme",
+    theme: "patternpack-example-theme",
     logo: "/theme-assets/images/logo.svg",
 
     // Operation to run (default|build|release)
@@ -53,18 +54,42 @@ module.exports = function (grunt) {
     }
   };
 
-  function getPackagePathOrFallbackPath(path) {
-    var validatedPath;
-    var pathOfPackage = npmPath + path;
+  function getPathOrPackagePath(path) {
+    var packagePath;
 
-    if (fs.existsSync(pathOfPackage)) {
-      validatedPath = pathOfPackage;
-    } else if (fs.existsSync(path)) {
-      validatedPath = path;
-    } else {
-      throw new Error("Could not be found: " + pathOfPackage + " or " + path);
+    // Attempt to find the configured location
+    if (fs.existsSync(path)) {
+      packagePath = path;
     }
-    return validatedPath;
+
+    // If not found, look for the path as a node package
+    if (!packagePath) {
+      packagePath = getPackagePath(path);
+    }
+
+    if (!packagePath) {
+      throw new Error("Could not find package: " + path);
+    }
+
+    return packagePath;
+  }
+
+  function getPackagePath(name) {
+    var currentPath = "./" + path.relative(process.cwd(), path.dirname(__dirname));
+    var dependencyPaths = [
+      "./node_modules/",
+      "../node_modules/",
+      currentPath + "/node_modules/"
+    ];
+
+    // Look for the package in any of the node_modules locations
+    var packageDependencyPath = _.find(dependencyPaths, function(path) {
+      return fs.existsSync(path + name);
+    });
+
+    // Return the validated location of the package
+    // Otherwise return undefined
+    return packageDependencyPath ? packageDependencyPath + name : undefined;
   }
 
   function applyOverrides(value, overrideValue) {
@@ -72,7 +97,6 @@ module.exports = function (grunt) {
   }
 
   function getOptions(context) {
-    var path = require("path");
     var options = {};
     var optionOverrides = context.options();
     var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
@@ -90,24 +114,18 @@ module.exports = function (grunt) {
     options = applyOverrides(options, optionOverridesFile);
 
     // Resolve the theme path either from a path or from a package name
-    if (optionOverrides.theme) {
-      optionOverrides.theme = getPackagePathOrFallbackPath(optionOverrides.theme);
-    }
     log.verbose("Theme paths");
     log.verbose("Default: " + optionDefaults.theme);
     log.verbose("Override: " + optionOverrides.theme);
-
-    // If the pattern is specified by the user then get the relative path,
-    // otherwise use the path inside pattern pack to provide the default patterns.
-    options.theme = optionOverrides.theme ? path.relative(packagePath, optionOverrides.theme) : optionDefaults.theme;
+    options.theme = optionOverrides.theme ?  optionOverrides.theme : optionDefaults.theme;
+    options.theme = getPathOrPackagePath(options.theme);
+    options.theme = path.relative(packagePath, options.theme)
     log.verbose("Resolved: " + options.theme);
 
     return options;
   }
 
   function transformOptions(options) {
-    var path = require("path");
-
     // Add the relative path to the root of the calling pattern library
     options.root = path.relative(packagePath, "");
 
@@ -143,7 +161,6 @@ module.exports = function (grunt) {
   function ensureFilesExist(options) {
     // TODO: File generation should be enhanced to use templates rather than
     //       the current implementation that generates the files inline.
-    var path = require("path");
     var mkdirp = require("mkdirp");
 
     // Create core css file if it does not exist
