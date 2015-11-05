@@ -7,9 +7,8 @@ module.exports = function (grunt) {
   var _ = require("lodash");
   _.defaultsDeep = require("merge-defaults"); // Add deep defaults capabilities to lodash
 
-  var npmPath = "./node_modules/";
-  var packageName = "patternpack";
-  var packagePath = "./" + path.relative(process.cwd(), path.dirname(__dirname));
+  var packagePath = "./" + path.relative(process.cwd(), path.dirname(__dirname)); // "./node_modules/patternpack"
+  var packageName = path.basename(packagePath); // "patternpack"
   var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "", undefined];
   var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
