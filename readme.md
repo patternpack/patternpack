@@ -92,7 +92,7 @@ A folder to house any additional assets to be shared across projects (e.g., font
 Type: `string`  
 Default: `patternpack-example-theme`
 
-The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme]
+The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme](https://github.com/patternpack/patternpack-example-library)
 
 #### logo
 Type: `string`  
