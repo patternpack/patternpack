@@ -62,7 +62,7 @@ module.exports = function (grunt) {
     } else if (fs.existsSync(path)) {
       validatedPath = path;
     } else {
-      throw new Error("Could not be find: " + pathOfPackage + " or " + path);
+      throw new Error("Could not be found: " + pathOfPackage + " or " + path);
     }
     return validatedPath;
   }
@@ -72,6 +72,7 @@ module.exports = function (grunt) {
   }
 
   function getOptions(context) {
+    var path = require("path");
     var options = {};
     var optionOverrides = context.options();
     var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
