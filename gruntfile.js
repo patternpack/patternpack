@@ -336,10 +336,10 @@ module.exports = function (grunt) {
     // calling pattern library happens to contain one of the
     // dependencies used by pattern pack.  For more info:
     // https://www.npmjs.com/package/load-grunt-parent-tasks
-    log.log("load parent tasks");
+    log.verbose("load parent tasks");
     require("load-grunt-parent-tasks")(grunt, loadTaskConfig);
   } else {
-    log.log("load tasks");
+    log.verbose("load tasks");
     require("load-grunt-tasks")(grunt, loadTaskConfig);
   }
 
