@@ -62,9 +62,12 @@ module.exports = function (grunt) {
     // Determine the location where grunt should be run, and store the current location
     var gruntPath = getPathFromName(options.name);
     var originalPath = process.cwd();
+    var flags = _.filter(options.flag, function(value) {  // Remove the gruntfile option if present
+      return !_.startsWith("gruntfile", 2)
+    });
 
     var command = getGruntCommand();
-    var commandArgs = getTasks(options.tasks).concat(options.flags); // Pass any command line args to the child grunt task.
+    var commandArgs = getTasks(options.tasks).concat(flags); // Pass any command line args to the child grunt task.
     var commandConfig = getCommandConfig(gruntPath, commandArgs);
 
     // Log the command with arguments
