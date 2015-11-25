@@ -300,6 +300,43 @@ This example shows all options with their default options.
 }
 ```
 
+### Modular Tasks
+PatternPack makes some of its bundled functionality available in modular tasks. They are helpful if you are trying to add custom functionality to your pattern library. Here is what each task does for you:
+
+These are available as a part of your `patternpack` task in your `gruntfile.js`.
+
+```
+patternpack: {
+  options: {
+    ...
+  },
+  build: {},
+  "build-styles": {},
+  "build-pages": {},
+  integrate: {},
+},
+```
+
+#### patternpack:build
+This does a complete rebuild of your styles and website into your build directory (`/html/`). The only difference from this to `patternpack:run` is that no webserver/livereload is spun up.
+
+1. Cleans your build directory
+1. Builds your CSS (`patternpack:build-styles`)
+  1. Globs the Sass/LESS in your component directories
+  1. Builds all your Sass/LESS
+  1. Runs Autoprefixer
+  1. Copies your CSS to your build directory
+1. Builds your site pages into your build directory (`patternpack:build-pages`)
+
+#### patternpack:build-styles
+This does a rebuild of your CSS into your build directory.
+
+1. Globs the Sass/LESS in your component directories
+1. Builds all your Sass/LESS
+1. Runs Autoprefixer
+
+#### patternpack:build-pages
+This rebuilds your website pages into your build directory.
 
 ## PatternPack Workflow
 
