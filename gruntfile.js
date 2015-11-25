@@ -1,237 +1,364 @@
 module.exports = function (grunt) {
   "use strict";
 
-  var log = require("../gruntLogHelper.js")(grunt);
-  var fs = require("fs");
-  var path = require("path");
   var _ = require("lodash");
-  _.defaultsDeep = require("merge-defaults"); // Add deep defaults capabilities to lodash
+  var log = require("./gruntLogHelper.js")(grunt);
+  var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var autoprefixer = require("autoprefixer");
 
-  var packagePath = "./" + path.relative(process.cwd(), path.dirname(__dirname)); // "./node_modules/patternpack"
-  var packageName = path.basename(packagePath); // "patternpack"
-  var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "build-styles", "build-pages", "build-patterns", "", undefined];
-  var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
-  var gruntTaskName = "patternpack";
-  var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
-  var optionsOverrideFileName = ".patternpackrc";
-  var optionDefaults = {
-    // Paths for input and output
-    release: "./dist",
-    build: "./html",
-    src: "./src",
-    assets: "./src/assets",
-    theme: "patternpack-example-theme",
-    logo: "/theme-assets/images/logo.svg",
+  var gruntFileConfig = basePath + "/gruntfileConfig.json";
+  var config = grunt.file.readJSON(gruntFileConfig);
 
-    // Operation to run (default|build|release)
-    // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
-    // task: "build",
+  function root(path) {
+    return getPath(config.root, path);
+  }
 
-    // Configure our CSS
-    css: {
-      preprocessor: "sass",     // which preprocessor we should use (sass|less|none)
-      fileName: "patterns",      // the name for our final CSS file that will import everything
-      autoprefixer: {
-        browsers: ["last 2 versions"]
+  function integrate(path) {
+    return getPath(config.integrate, path)
+  }
+
+  function release(path) {
+    return getPath(config.release, path);
+  }
+
+  function build(path) {
+    return getPath(config.build, path);
+  }
+
+  function src(path) {
+    return getPath(config.src, path);
+  }
+
+  function assets(path) {
+    return getPath(config.assets, path);
+  }
+
+  function theme(path) {
+    return getPath(config.theme, path);
+  }
+
+  function getPath(configPath, path) {
+    path = path || "";
+    return configPath + path;
+  }
+
+  // return an array of paths with the src prepended
+  // this should return the array in the same order it was configured
+  // this is important because the styles may need to be processed in a
+  // specific order for css cascading needs.
+  function allPatternStructurePaths(path) {
+    return _.map(config.patternStructure, function (structure) {
+      return getPath(config.src + "/" + structure.path, path);
+    });
+  }
+
+  function getBuildTasks(tasksConfig) {
+    var buildTasks = ["clean:build", "styles-patterns"];
+    var patternsTasks = ["assemble-patterns"];
+    var patternLibraryTasks = ["assemble-pattern-library"];
+
+    if (tasksConfig.library) {
+      buildTasks = buildTasks.concat(patternLibraryTasks);
+    }
+
+    if (tasksConfig.patterns) {
+      buildTasks = buildTasks.concat(patternsTasks);
+    }
+
+    log.verbose("PatternPack Grunt Tasks:");
+    log.verbose(buildTasks);
+    return buildTasks;
+  }
+
+  function getStyleTasks(cssPreprocessorConfig) {
+    var sassTasks = ["sass_globbing:sass", "sass"];
+    var lessTasks = ["sass_globbing:less", "less"];
+    var cssTasks = ["postcss", "copy:css"];
+    var tasks = [];
+
+    if (cssPreprocessorConfig === "sass") {
+      tasks = tasks.concat(sassTasks);
+    } else if (cssPreprocessorConfig === "less") {
+      tasks = tasks.concat(lessTasks);
+    }
+
+    tasks = tasks.concat(cssTasks);
+
+    log.verbose("PatternPack CSS Preprocessor Tasks:");
+    log.verbose(tasks);
+    return tasks;
+  }
+
+  grunt.initConfig({
+    pkg: grunt.file.readJSON("package.json"),
+
+    gitadd: {
+      task: {
+        options: {
+          all: true
+        }
       }
     },
 
-    // Configures the ability to only publish certain resources (css|library|patterns)
-    publish: {
-      library: true,
-      patterns: false
+    bump: {
+      options: {
+        files: [
+          root("/bower.json"),
+          root("/package.json")
+        ],
+        updateConfigs: ["pkg"],
+        commitFiles: ["-a"],
+        push: false
+      }
     },
 
-    // Configures the pattern hierarchy.
-    patternStructure: [
-      { name: "Atoms", path: "atoms" },
-      { name: "Molecules", path: "molecules" },
-      { name: "Pages", path: "pages" }
-    ],
-    server: {
-      port: 8888
+    // Concurent tasks
+    concurrent: {
+      build: ["styles", "assemble"]
+    },
+
+    // Build HTML with Assemble.io
+    assemble: {
+      options: {
+        patternStructure: config.patternStructure,
+        helpers: [theme("/assemble-helpers/*.js"), "assemble-helpers/assemble-helper-*.js"],
+        partials: theme("/partials/*.hbs"),
+        postprocess: require("pretty")
+      },
+      // Build the pattern library (fully functioning website)
+      patternlibrary: {
+        options: {
+          assets: build("/pattern-library/assets"),
+          layout: theme("/layouts/_pattern-library.hbs")
+        },
+        files: [
+          {
+            expand: true,
+            cwd: src(),
+            src: ["**/*.{md,hbs}", "!_pattern-library/**"],
+            dest: build("/pattern-library/")
+          }
+        ]
+      },
+      // Bulid the patterns as raw html only (designed to be embedded in another website)
+      patterns: {
+        files: [
+          {
+            expand: true,
+            cwd: src(),
+            src: ["**/*.{md,hbs}", "!_pattern-library/**"],
+            dest: build("/patterns/")
+          }
+        ]
+      }
+    },
+
+    // Remove existing build artifacts
+    clean: {
+      options: {
+        force: true
+      },
+      build: build(),
+      release: release()
+    },
+
+    // Copy the artifacts for release
+    copy: {
+      release: {
+        expand: true,
+        cwd: build(),
+        src: [
+          "**"
+        ],
+        dest: release()
+      },
+      integrate: {
+        expand: true,
+        cwd: build(),
+        src: [
+          "**",
+          "!pattern-library/theme-assets/**"
+        ],
+        dest: integrate()
+      },
+      css: {
+        expand: true,
+        cwd: assets(),
+        src: [
+          "css/**"
+        ],
+        dest: build("/pattern-library/assets")
+      },
+      assets: {
+        expand: true,
+        cwd: assets(),
+        src: [
+          "**",
+          "!sass/**"
+        ],
+        dest: build("/pattern-library/assets")
+      },
+      themeAssets: {
+        expand: true,
+        cwd: theme(),
+        src: [
+          "theme-assets/**"
+        ],
+        dest: build("/pattern-library")
+      }
+    },
+
+    // Build styles
+    sass: {
+      options: {
+        sourceMap: true,
+        sourceMapContents: true,
+        outputStyle: "compressed"
+      },
+      patterns: {
+        files: [
+          {
+            src: assets("/sass/" + config.css.fileName + ".scss"),
+            dest: assets("/css/" + config.css.fileName + ".css")
+          }
+        ]
+      }
+    },
+
+    less: {
+      options: {
+        sourceMap: true,
+        outputSourceFiles: true,
+        compress: true
+      },
+      patterns: {
+        files: [
+          {
+            src: assets("/less/" + config.css.fileName + ".less"),
+            dest: assets("/css/" + config.css.fileName + ".css")
+          }
+        ]
+      }
+    },
+
+    // Import all sass styles defined for patterns
+    // Use the pattern structures to ensure that the styles are processed
+    // in the specific order the user configures.
+    "sass_globbing": {
+      sass: {
+        src: allPatternStructurePaths("/**/*.scss"),
+        dest: assets("/sass/_patternpack-patterns.scss")
+      },
+      less: {
+        src: allPatternStructurePaths("/**/*.less"),
+        dest: assets("/less/_patternpack-patterns.less")
+      }
+    },
+
+    // Run PostCSS Autoprefixer on any CSS in the assets directory
+    // Using the configured Autoprefixer options (defaults to last 2 versions)
+    postcss: {
+      options: {
+        map: true,
+        processors: [
+          autoprefixer(
+            config.css.autoprefixer
+          )
+        ]
+      },
+      build: {
+        src: assets("/css/*.css")
+      }
+    },
+
+    // Run tasks when files change
+    watch: {
+      assemble: {
+        files: [
+          theme("/**/*.{md,hbs}"),
+          src("/**/*.{md,hbs}")
+        ],
+        tasks: ["assemble-pattern-library"]
+      },
+      sass: {
+        files: src("/**/*.scss"),
+        tasks: ["styles-patterns", "copy:css"]
+      },
+      less: {
+        files: src("/**/*.less"),
+        tasks: ["styles-patterns", "copy:css"]
+      },
+      livereload: {
+        files: build("/pattern-library/**"),
+        options: {
+          livereload: true
+        }
+      }
+    },
+
+    // Web server
+    connect: {
+      options: {
+        base: build("/pattern-library"),
+        hostname: "*"
+      },
+      server: {
+        options: config.server
+      }
+    },
+
+    eslint: {
+      target: [
+        "**/*.js",
+        "!node_modules/**"
+      ]
     }
+  });
+
+  var loadTaskConfig = {
+    // The globbing pattern used to locate the desired grunt tasks
+    pattern: [
+      "grunt-*",
+      "assemble"
+    ],
+    // The list of dependencies to include
+    // ["dependencies", "optionalDependencies"]
+    scope: ["dependencies"]
   };
 
-  function getPathOrPackagePath(path) {
-    var packagePath;
-
-    // Attempt to find the configured location
-    if (fs.existsSync(path)) {
-      packagePath = path;
-    }
-
-    // If not found, look for the path as a node package
-    if (!packagePath) {
-      packagePath = getPackagePath(path);
-    }
-
-    if (!packagePath) {
-      throw new Error("Could not find package: " + path);
-    }
-
-    return packagePath;
+  // If the root configuration exists it indicates that patternpack is
+  // running from the context of another grunt process.  In this case
+  // we should use load-grunt-parent-tasks to ensure the npm packages
+  // are loaded correctly.  Otherwise, just load the tasks like normal.
+  if (config.root) {
+    // Load the tasks using the load-grunt-parent-tasks module.
+    // This allows the grunt tasks to still be loaded when the
+    // calling pattern library happens to contain one of the
+    // dependencies used by pattern pack.  For more info:
+    // https://www.npmjs.com/package/load-grunt-parent-tasks
+    log.verbose("load parent tasks");
+    require("load-grunt-parent-tasks")(grunt, loadTaskConfig);
+  } else {
+    log.verbose("load tasks");
+    require("load-grunt-tasks")(grunt, loadTaskConfig);
   }
 
-  function getPackagePath(name) {
-    var currentPath = "./" + path.relative(process.cwd(), path.dirname(__dirname));
-    var dependencyPaths = [
-      "./node_modules/",
-      "../node_modules/",
-      currentPath + "/node_modules/"
-    ];
+  // Modular tasks
+  // These smaller grunt tasks organize work into logical groups
+  // and are typically composed together into workflows
+  grunt.registerTask("styles-patterns", getStyleTasks(config.css.preprocessor));
+  grunt.registerTask("assemble-patterns", ["assemble:patterns"]);
+  grunt.registerTask("assemble-pattern-library", ["assemble:patternlibrary", "copy:assets", "copy:themeAssets"]);
 
-    // Look for the package in any of the node_modules locations
-    var packageDependencyPath = _.find(dependencyPaths, function(path) {
-      return fs.existsSync(path + name);
-    });
+  grunt.registerTask("server", ["connect", "watch"]);
 
-    // Return the validated location of the package
-    // Otherwise return undefined
-    return packageDependencyPath ? packageDependencyPath + name : undefined;
-  }
+  grunt.registerTask("release-patch", ["build", "clean:release", "copy:release", "gitadd", "bump:patch"]);
+  grunt.registerTask("release-minor", ["build", "clean:release", "copy:release", "gitadd", "bump:minor"]);
+  grunt.registerTask("release-major", ["build", "clean:release", "copy:release", "gitadd", "bump:major"]);
 
-  function applyOverrides(value, overrideValue) {
-    return _.defaultsDeep(_.cloneDeep(overrideValue), value);
-  }
-
-  function getOptions(context) {
-    var options = {};
-    var optionOverrides = context.options();
-    var optionOverridesFile = grunt.file.exists(optionsOverrideFileName) ? grunt.file.readJSON(optionsOverrideFileName) : {};
-
-    // If the task is allowed then use it as the default value.
-    // Otherwise leave the task blank, which will result in "default" being called
-    if (_.contains(tasksValues, context.target)) {
-      optionDefaults.task = context.target;
-    }
-
-    // Override the defaults with any user specified options
-    // Apply overrides from the .patternpackrc file
-    // then apply the overrries from the gruntfile options
-    options = applyOverrides(optionDefaults, optionOverrides);
-    options = applyOverrides(options, optionOverridesFile);
-
-    // Resolve the theme path either from a path or from a package name
-    log.verbose("Theme paths");
-    log.verbose("Default: " + optionDefaults.theme);
-    log.verbose("Override: " + optionOverrides.theme);
-    options.theme = optionOverrides.theme ?  optionOverrides.theme : optionDefaults.theme;
-    options.theme = getPathOrPackagePath(options.theme);
-    options.theme = path.relative(packagePath, options.theme)
-    log.verbose("Resolved: " + options.theme);
-
-    return options;
-  }
-
-  function transformOptions(options) {
-    // Add the relative path to the root of the calling pattern library
-    options.root = path.relative(packagePath, "");
-
-    // Massage any paths to be relative to the child process
-    options.release = path.relative(packagePath, options.release);
-    options.build = path.relative(packagePath, options.build);
-    options.src = path.relative(packagePath, options.src);
-    options.assets = path.relative(packagePath, options.assets);
-
-    // Resolve the application integration path if the user has provided it
-    if (options.integrate) {
-      options.integrate = path.relative(packagePath, options.integrate);
-    }
-
-    return options;
-  }
-
-  function saveOptions(options) {
-    var file = packagePath + "/gruntfileConfig.json";
-    var contents = JSON.stringify(options);
-    grunt.file.write(file, contents);
-  }
-
-  function ensureOptions(options, name, allowedValues, allowFalsey) {
-    var value = options[name];
-    if (!_.contains(allowedValues, value)) {
-      log.log("Allowed values for " + name + "");
-      log.log(allowedValues);
-      throw new Error("The option " + name + " was set to an unacceptable value: " + value);
-    }
-  }
-
-  function ensureFilesExist(options) {
-    // TODO: File generation should be enhanced to use templates rather than
-    //       the current implementation that generates the files inline.
-    var mkdirp = require("mkdirp");
-
-    // Create core css file if it does not exist
-    var coreCssExtension = options.css.preprocessor === "sass" ? "scss" : options.css.preprocessor;
-    var coreCssFileName = options.css.fileName + "." + coreCssExtension;
-    var coreCssDirectory = options.assets + "/" + options.css.preprocessor;
-    var coreCssPath = coreCssDirectory + "/" + coreCssFileName;
-
-    if (!fs.existsSync(coreCssPath)) {
-      log.verbose("Generating the core CSS file: " + coreCssPath);
-      mkdirp.sync(coreCssDirectory);
-      fs.writeFileSync(coreCssPath, '@import "_patternpack-patterns";');    // TODO: Make this a template based on Sass/LESS - LESS requires the underscore
-    }
-
-    // Create the dirctories for the pattern structure if they do not exist
-    _.each(options.patternStructure, function(pattern) {
-      if (!fs.existsSync(options.src + "/" + pattern.path)) {
-        log.verbose("Generating the pattern directory: " + options.src + "/" + pattern.path);
-        fs.mkdir(options.src + "/" + pattern.path);
-      }
-    });
-
-    // Generate a placeholder index.md file
-    var indexFile = options.src + "/index.md";
-    if (!fs.existsSync(indexFile)) {
-      log.verbose("Generating the index file: " + coreCssPath);
-      fs.writeFileSync(indexFile, '# Welcome to PatternPack');
-    }
-  }
-
-  function gruntPatternPackTask() {
-    var done = this.async();
-
-    // Ensure that the packagePath exists.
-    // TODO: Figure out how to abstract this path creation.  It is also used in the gruntRunner.js
-    if (!fs.existsSync(packagePath)) {
-      throw new Error("The path to the pattern pack dependency does not exists at: " + packagePath);
-    }
-
-    // Get the options
-    var options = getOptions(this);
-
-    // Ensure option values are set to acceptable values
-    // and files/directories are present
-    ensureOptions(options, "task", tasksValues);
-    ensureOptions(options.css, "preprocessor", cssPreprocessorValues);
-    ensureFilesExist(options);
-
-    // Change the options to be relative to the patternpackage package
-    options = transformOptions(options);
-    log.verbose("PatternPack options:");
-    log.verbose(options);
-
-    // Save the options
-    // Since I haven"t figured out how to pass the options from the command
-    // save the options to a file that can then be used by the child grunt task.
-    saveOptions(options);
-    // TODO: FIX THIS.  Pass the options to the command!
-
-    // Create the options required to run the child grunt process
-    var gruntRunner = require("../gruntRunner.js")(grunt);
-    var gruntRunnerOptions = {
-      name: packageName,
-      tasks: options.task,
-      flags: grunt.option.flags()
-    };
-
-    log.verbose("PatternPack configured to run:");
-    log.verbose(gruntRunnerOptions);
-    log.verbose("PatternPack running...");
-    gruntRunner.run(gruntRunnerOptions, done);
-  }
-
-  grunt.registerMultiTask(gruntTaskName, gruntTaskDescription, gruntPatternPackTask);
+  // Main tasks
+  grunt.registerTask("integrate", ["build", "copy:integrate"]);
+  grunt.registerTask("release", ["release-patch"]);
+  grunt.registerTask("build", getBuildTasks(config.publish));
+  grunt.registerTask("default", ["build", "server"]);
 };
