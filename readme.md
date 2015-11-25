@@ -301,9 +301,9 @@ This example shows all options with their default options.
 ```
 
 ### Modular Tasks
-PatternPack makes some of its bundled functionality available in modular tasks. They are helpful if you are trying to add custom functionality to your pattern library. Here is what each task does for you:
+PatternPack makes some of its bundled functionality available in modular tasks. They are helpful if you are trying to add custom functionality to your pattern library.
 
-These are available as a part of your `patternpack` task in your `gruntfile.js`.
+These are available as a part of your `patternpack` task in your `gruntfile.js`:
 
 ```
 patternpack: {
