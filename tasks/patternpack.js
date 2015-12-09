@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 
   var packagePath = "./" + path.relative(process.cwd(), path.dirname(__dirname)); // "./node_modules/patternpack"
   var packageName = path.basename(packagePath); // "patternpack"
-  var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "", undefined];
+  var tasksValues = ["default", "build", "integrate", "release", "release-patch", "release-minor", "release-major", "build-styles", "build-pages", "build-patterns", "", undefined];
   var cssPreprocessorValues = ["less", "sass", "none", "", undefined];
   var gruntTaskName = "patternpack";
   var gruntTaskDescription = "Creates a pattern library from structured markdown and styles.";
