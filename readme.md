@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 
 Running `grunt` with this will auto-generate all necessary files on initial run.
 
-To learn more about PatternPack, check out the [Guides and Resources](https://github.com/patternpack/patternpack/blob/master/docs/docs.md).
+To learn more about PatternPack, check out the [Guides and Resources](https://github.com/patternpack/patternpack/blob/master/docs/docs.md). We also have a [Slack channel](http://slack.patternpack.org/) available.
 
 ## PatternPack Task
 _Run this task with the `grunt patternpack` command._
