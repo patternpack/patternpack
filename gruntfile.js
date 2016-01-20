@@ -88,6 +88,24 @@ module.exports = function (grunt) {
     log.verbose(tasks);
     return tasks;
   }
+  
+  function getInputOutputFilesConfiguration(config, path, fileExtension) {
+    if(config.css.fileNames) {
+      return config.css.fileNames.map(function(fileName) {
+        return {
+          src: assets(path + fileName + fileExtension),
+          dest: assets("/css/" + fileName + ".css")
+        };
+      });
+    } else {
+      return [
+        {
+          src: assets(path + config.css.fileName + fileExtension),
+          dest: assets("/css/" + config.css.fileName + ".css")
+        }
+      ]
+    }
+  }
 
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
@@ -216,12 +234,7 @@ module.exports = function (grunt) {
         outputStyle: "compressed"
       },
       patterns: {
-        files: [
-          {
-            src: assets("/sass/" + config.css.fileName + ".scss"),
-            dest: assets("/css/" + config.css.fileName + ".css")
-          }
-        ]
+        files: getInputOutputFilesConfiguration(config, "/sass/", ".scss")
       }
     },
 
@@ -232,12 +245,7 @@ module.exports = function (grunt) {
         compress: true
       },
       patterns: {
-        files: [
-          {
-            src: assets("/less/" + config.css.fileName + ".less"),
-            dest: assets("/css/" + config.css.fileName + ".css")
-          }
-        ]
+        files: getInputOutputFilesConfiguration(config, "/less/", ".less")
       }
     },
 
