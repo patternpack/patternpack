@@ -37,6 +37,10 @@ module.exports = function (grunt) {
     return getPath(config.theme, path);
   }
 
+  function data(path) {
+    return getPath(config.data, path);
+  }
+
   function getPath(configPath, path) {
     path = path || "";
     return configPath + path;
@@ -123,7 +127,8 @@ module.exports = function (grunt) {
         patternStructure: config.patternStructure,
         helpers: [theme("/assemble-helpers/*.js"), "assemble-helpers/assemble-helper-*.js"],
         partials: theme("/partials/*.hbs"),
-        postprocess: require("pretty")
+        postprocess: require("pretty"),
+        data: data("/**/*.{json,yml}")
       },
       // Build the pattern library (fully functioning website)
       patternlibrary: {

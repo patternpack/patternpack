@@ -21,6 +21,7 @@ module.exports = function (grunt) {
     src: "./src",
     assets: "./src/assets",
     theme: "patternpack-example-theme",
+    data: "./data",
     logo: "/theme-assets/images/logo.svg",
 
     // Operation to run (default|build|release)
@@ -133,6 +134,7 @@ module.exports = function (grunt) {
     options.build = path.relative(packagePath, options.build);
     options.src = path.relative(packagePath, options.src);
     options.assets = path.relative(packagePath, options.assets);
+    options.data = path.relative(packagePath, options.data);
 
     // Resolve the application integration path if the user has provided it
     if (options.integrate) {

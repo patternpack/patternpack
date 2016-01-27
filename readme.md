@@ -94,6 +94,12 @@ Default: `patternpack-example-theme`
 
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme](https://github.com/patternpack/patternpack-example-library)
 
+#### data
+Type: `string`
+Default: `./data`
+
+Allows you to pass JSON or YML data files from this directory into your pages. By default, it would be exposed as `{{filename}}`. To learn more look at the [Assemble's documentation on supplying data to templates](http://assemble.io/docs/options-data.html).
+
 #### logo
 Type: `string`  
 Default: `/theme-assets/images/logo.svg`
