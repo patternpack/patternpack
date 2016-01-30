@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 
 Running `grunt` with this will auto-generate all necessary files on initial run.
 
-To learn more about PatternPack, check out the [Guides and Resources](https://github.com/patternpack/patternpack/blob/master/docs/docs.md).
+To learn more about PatternPack, check out the [Guides and Resources](https://github.com/patternpack/patternpack/blob/master/docs/docs.md). We also have a [Slack channel](http://slack.patternpack.org/) available.
 
 ## PatternPack Task
 _Run this task with the `grunt patternpack` command._
@@ -93,6 +93,12 @@ Type: `string`
 Default: `patternpack-example-theme`
 
 The name of the npm package (or the path) which contains the PatternPack theme. Custom themes can be npm modules or simply files that exist within a pattern library. By default PatternPack is configured to use the [patternpack-example-theme](https://github.com/patternpack/patternpack-example-library)
+
+#### data
+Type: `string`
+Default: `./data`
+
+Allows you to pass JSON or YML data files from this directory into your pages. By default, it would be exposed as `{{filename}}`. To learn more look at the [Assemble's documentation on supplying data to templates](http://assemble.io/docs/options-data.html).
 
 #### logo
 Type: `string`  
@@ -300,6 +306,43 @@ This example shows all options with their default options.
 }
 ```
 
+### Modular Tasks
+PatternPack makes some of its bundled functionality available in modular tasks. They are helpful if you are trying to add custom functionality to your pattern library.
+
+These are available as a part of your `patternpack` task in your `gruntfile.js`:
+
+```
+patternpack: {
+  options: {
+    ...
+  },
+  build: {},
+  "build-styles": {},
+  "build-pages": {},
+  integrate: {},
+},
+```
+
+#### patternpack:build
+This does a complete rebuild of your styles and website into your build directory (`/html/`). The only difference from this to `patternpack:run` is that no webserver/livereload is spun up.
+
+1. Cleans your build directory
+1. Builds your CSS (`patternpack:build-styles`)
+  1. Globs the Sass/LESS in your component directories
+  1. Builds all your Sass/LESS
+  1. Runs Autoprefixer
+  1. Copies your CSS to your build directory
+1. Builds your site pages into your build directory (`patternpack:build-pages`)
+
+#### patternpack:build-styles
+This does a rebuild of your CSS into your build directory.
+
+1. Globs the Sass/LESS in your component directories
+1. Builds all your Sass/LESS
+1. Runs Autoprefixer
+
+#### patternpack:build-pages
+This rebuilds your website pages into your build directory.
 
 ## PatternPack Workflow
 

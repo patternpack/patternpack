@@ -23,7 +23,7 @@
     "lodash": "^3.10.1",
     "merge-defaults": "^0.2.1",
     "mkdirp": "^0.5.1",
-    "patternpack-example-theme": "^1.0.0",
+    "patternpack-example-theme": "^1.0.2",
     "pretty": "^1.0.0"
   },
   "devDependencies": {

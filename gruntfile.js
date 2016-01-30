@@ -37,6 +37,10 @@ module.exports = function (grunt) {
     return getPath(config.theme, path);
   }
 
+  function data(path) {
+    return getPath(config.data, path);
+  }
+
   function getPath(configPath, path) {
     path = path || "";
     return configPath + path;
@@ -53,9 +57,9 @@ module.exports = function (grunt) {
   }
 
   function getBuildTasks(tasksConfig) {
-    var buildTasks = ["clean:build", "styles-patterns"];
-    var patternsTasks = ["assemble-patterns"];
-    var patternLibraryTasks = ["assemble-pattern-library"];
+    var buildTasks = ["clean:build", "build-styles"];
+    var patternsTasks = ["build-patterns"];
+    var patternLibraryTasks = ["build-site"];
 
     if (tasksConfig.library) {
       buildTasks = buildTasks.concat(patternLibraryTasks);
@@ -123,7 +127,8 @@ module.exports = function (grunt) {
         patternStructure: config.patternStructure,
         helpers: [theme("/assemble-helpers/*.js"), "assemble-helpers/assemble-helper-*.js"],
         partials: theme("/partials/*.hbs"),
-        postprocess: require("pretty")
+        postprocess: require("pretty"),
+        data: data("/**/*.{json,yml}")
       },
       // Build the pattern library (fully functioning website)
       patternlibrary: {
@@ -278,15 +283,15 @@ module.exports = function (grunt) {
           theme("/**/*.{md,hbs}"),
           src("/**/*.{md,hbs}")
         ],
-        tasks: ["assemble-pattern-library"]
+        tasks: ["build-site"]
       },
       sass: {
         files: src("/**/*.scss"),
-        tasks: ["styles-patterns", "copy:css"]
+        tasks: ["build-styles", "copy:css"]
       },
       less: {
         files: src("/**/*.less"),
-        tasks: ["styles-patterns", "copy:css"]
+        tasks: ["build-styles", "copy:css"]
       },
       livereload: {
         files: build("/pattern-library/**"),
@@ -346,9 +351,10 @@ module.exports = function (grunt) {
   // Modular tasks
   // These smaller grunt tasks organize work into logical groups
   // and are typically composed together into workflows
-  grunt.registerTask("styles-patterns", getStyleTasks(config.css.preprocessor));
-  grunt.registerTask("assemble-patterns", ["assemble:patterns"]);
-  grunt.registerTask("assemble-pattern-library", ["assemble:patternlibrary", "copy:assets", "copy:themeAssets"]);
+  grunt.registerTask("build-styles", getStyleTasks(config.css.preprocessor));
+  grunt.registerTask("build-patterns", ["assemble:patterns"]);
+  grunt.registerTask("build-pages", ["assemble:patternlibrary"]);
+  grunt.registerTask("build-site", ["build-pages", "copy:assets", "copy:themeAssets"]);
 
   grunt.registerTask("server", ["connect", "watch"]);
 
