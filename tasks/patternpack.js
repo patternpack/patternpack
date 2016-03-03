@@ -186,6 +186,18 @@ module.exports = function (grunt) {
       }
     });
 
+    // Generate the Templates Folder
+    if (!fs.existsSync(options.src + "/" + options.templates)) {
+      log.verbose("Generating the templates directory:" + options.src + "/" + options.templates);
+      fs.mkdir(options.src + "/" + options.templates);
+    }
+
+    // Generate the Examples Folder
+    if (!fs.existsSync(options.src + "/" + options.examples)) {
+      log.verbose("Generating the examples directory:" + options.src + "/" + options.examples);
+      fs.mkdir(options.src + "/" + options.examples);
+    }
+
     // Generate a placeholder index.md file
     var indexFile = options.src + "/index.md";
     if (!fs.existsSync(indexFile)) {
