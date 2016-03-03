@@ -126,7 +126,10 @@ module.exports = function (grunt) {
       options: {
         patternStructure: config.patternStructure,
         helpers: [theme("/assemble-helpers/*.js"), "assemble-helpers/assemble-helper-*.js"],
-        partials: theme("/partials/*.hbs"),
+        partials: [
+          theme("/partials/*.hbs"),
+          src("/" + config.examples + "/**/*.hbs")
+        ],
         postprocess: require("pretty"),
         data: data("/**/*.{json,yml}")
       },
@@ -140,7 +143,10 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: src(),
-            src: ["**/*.{md,hbs}", "!_pattern-library/**"],
+            src: [
+              "**/*.{md,hbs}",
+              "!" + config.templates + "/**",
+            ],
             dest: build("/pattern-library/")
           }
         ]

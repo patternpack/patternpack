@@ -23,6 +23,8 @@ module.exports = function (grunt) {
     theme: "patternpack-example-theme",
     data: "./data",
     logo: "/theme-assets/images/logo.svg",
+    templates: "templates",                   // only use the directory name because it gets reused in a context where we don't need the ./
+    examples: "./examples",
 
     // Operation to run (default|build|release)
     // TODO: consider using a flag for the "MODE" of operation (dev|build|release)
