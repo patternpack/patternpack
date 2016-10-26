@@ -3,7 +3,8 @@ module.exports.register = function (Handlebars, options, params) {
 
   var grunt = require("grunt")
 
-  var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var gruntfilePath = grunt.option("gruntfile") || ".";
+  var basePath = require("path").dirname(gruntfilePath);
   var gruntFileConfig = basePath + "/gruntfileConfig.json";
   var config = grunt.file.readJSON(gruntFileConfig);
 
