@@ -1,7 +1,7 @@
 {
   "name": "patternpack",
   "description": "Build and Document Your Interface. Then Share the Code.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "MIT",
   "dependencies": {
     "assemble": "^0.4.42",
