@@ -3,7 +3,8 @@ module.exports = function (grunt) {
 
   var _ = require("lodash");
   var log = require("./gruntLogHelper.js")(grunt);
-  var basePath = require("path").dirname(grunt.option("gruntfile"));
+  var gruntfilePath = grunt.option("gruntfile") || ".";
+  var basePath = require("path").dirname(gruntfilePath);
   var autoprefixer = require("autoprefixer");
 
   var gruntFileConfig = basePath + "/gruntfileConfig.json";
